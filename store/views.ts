@@ -1,4 +1,3 @@
-import { MetaFields } from "../lib/airtable";
 import {
   action,
   Action,
@@ -9,6 +8,10 @@ import {
   ThunkOn,
   thunkOn,
 } from "easy-peasy";
+import { FeatureCollection } from "geojson";
+
+import { MetaFields } from "../lib/airtable";
+import { toGeoJSONFeatureCollection } from "../lib/geojson";
 import { API } from "../lib/api";
 
 export interface ViewsModel {
@@ -60,7 +63,7 @@ export interface ViewsModel {
 export interface ViewsItem {
   metadata: MetaFields;
   // TODO: add types
-  data: null | object[];
+  data: null | FeatureCollection;
 }
 
 export const viewsModel: ViewsModel = {
@@ -122,12 +125,9 @@ export const viewsModel: ViewsModel = {
       viewName,
       primaryFieldName,
     });
-    const data = records.map((record) => {
-      const { id, fields } = record;
-      return { id, fields };
-    });
-    const updatedItem = { ...viewItem, data };
 
+    const featureCollection = toGeoJSONFeatureCollection(records);
+    const updatedItem = { ...viewItem, data: featureCollection };
     actions.set({ metaRecordId, data: updatedItem });
   }),
 
