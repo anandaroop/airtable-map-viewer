@@ -10,13 +10,16 @@ export const API = {
   fetchRecordsFromView: async ({
     tableName,
     viewName,
+    primaryFieldName,
   }: {
     tableName: string;
     viewName: string;
+    primaryFieldName: string;
   }): Promise<Airtable.Record<any>[]> => {
     const params = new URLSearchParams([
       ["tableName", tableName],
       ["viewName", viewName],
+      ["primaryFieldName", primaryFieldName],
     ]);
     const response = await fetch(`/api/views?${params.toString()}`);
     const json = await response.json();

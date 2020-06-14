@@ -115,8 +115,13 @@ export const viewsModel: ViewsModel = {
 
     const tableName = viewItem.metadata["Table name"];
     const viewName = viewItem.metadata["View name"];
+    const primaryFieldName = viewItem.metadata["Primary field name"];
 
-    const records = await API.fetchRecordsFromView({ tableName, viewName });
+    const records = await API.fetchRecordsFromView({
+      tableName,
+      viewName,
+      primaryFieldName,
+    });
     const data = records.map((record) => {
       const { id, fields } = record;
       return { id, fields };
