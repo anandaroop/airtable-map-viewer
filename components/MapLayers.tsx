@@ -3,6 +3,9 @@ import { CircleMarker } from "leaflet";
 
 import { useStoreState } from "../store";
 
+// show GeoJSON in sidebar?
+const DEBUG = true
+
 const MapLayers = () => {
   const displayableViews = useStoreState((state) => state.views.displayable);
 
@@ -31,16 +34,18 @@ const MapLayers = () => {
         ))}
       </Map>
 
-      <div className="geojson">
-        <div>
-          {displayableViews.map((v) => (
-            <div key={v.metadata["View ID"]}>
-              <h2>{v.metadata["View name"]}</h2>
-              <pre>{JSON.stringify(v.data, null, 2)}</pre>
-            </div>
-          ))}
+      {DEBUG && (
+        <div className="geojson">
+          <div>
+            {displayableViews.map((v) => (
+              <div key={v.metadata["View ID"]}>
+                <h2>{v.metadata["View name"]}</h2>
+                <pre>{JSON.stringify(v.data, null, 2)}</pre>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <style jsx global>
         {`
