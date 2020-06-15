@@ -16,9 +16,12 @@ export const decodeAirtableGeodata = (value: string): AirtableCachedGeocode => {
  * Take a set of Airtable records and transform it into a
  * GeoJSON FeatureCollection, one Feature for each record.
  */
-export const toGeoJSONFeatureCollection = (records: Records<any>) => {
+export const toGeoJSONFeatureCollection = (
+  records: Records<any>,
+  airtableLocation: { tableId: string; viewId: string }
+) => {
   const features = records
-    .map((record) => toGeoJSONFeature(record))
+    .map((record) => toGeoJSONFeature(record, airtableLocation))
     .filter(Boolean) as Feature<Point>[];
 
   const featureCollection: FeatureCollection<Point> = {
@@ -32,7 +35,10 @@ export const toGeoJSONFeatureCollection = (records: Records<any>) => {
  * Transform an Airtable record into a GeoJSON Feature,
  * with geometry coming from the geocoded & cached Airtable column.
  */
-const toGeoJSONFeature = (record: Record<any>) => {
+const toGeoJSONFeature = (
+  record: Record<any>,
+  airtableLocation: { tableId: string; viewId: string }
+) => {
   try {
     const cachedGeocoderResult = record.fields["Geocode cache"];
     delete record.fields["Geocode cache"];
@@ -44,7 +50,8 @@ const toGeoJSONFeature = (record: Record<any>) => {
 
     const feature: Feature<Point> = {
       type: "Feature",
-      properties: record.fields,
+      id: record.id,
+      properties: { ...record.fields, ...airtableLocation },
       geometry: {
         type: "Point",
         coordinates: [lng, lat],

@@ -116,7 +116,9 @@ export const viewsModel: ViewsModel = {
     const isAlreadyLoaded = !!viewItem.data;
     if (isAlreadyLoaded) return;
 
+    const tableId = viewItem.metadata["Table ID"];
     const tableName = viewItem.metadata["Table name"];
+    const viewId = viewItem.metadata["View ID"];
     const viewName = viewItem.metadata["View name"];
     const primaryFieldName = viewItem.metadata["Primary field name"];
 
@@ -126,7 +128,16 @@ export const viewsModel: ViewsModel = {
       primaryFieldName,
     });
 
-    const featureCollection = toGeoJSONFeatureCollection(records);
+    const airtableLocation = {
+      tableId,
+      viewId,
+    };
+
+    const featureCollection = toGeoJSONFeatureCollection(
+      records,
+      airtableLocation
+    );
+
     const updatedItem = { ...viewItem, data: featureCollection };
     actions.set({ metaRecordId, data: updatedItem });
   }),
