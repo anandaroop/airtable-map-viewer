@@ -1,5 +1,10 @@
+import Head from "next/head";
+import dynamic from "next/dynamic";
+
 import { ViewSelector } from "./ViewSelector";
-import { MapLayers } from "./MapLayers";
+// import { MapLayers } from "./MapLayers";
+
+const MapLayersWithNoSSR = dynamic(() => import("./MapLayers"), { ssr: false });
 
 interface MapViewerProps {
   preSelectedViewIds?: string[];
@@ -8,9 +13,17 @@ interface MapViewerProps {
 export const MapViewer: React.FC<MapViewerProps> = () => {
   return (
     <>
+      <Head>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        />
+      </Head>
+
+
       <main>
         <ViewSelector />
-        <MapLayers />
+        <MapLayersWithNoSSR />
       </main>
 
       <style jsx>

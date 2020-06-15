@@ -138,6 +138,11 @@ export const viewsModel: ViewsModel = {
       airtableLocation
     );
 
+    // only include geolocated features
+    featureCollection.features = featureCollection.features.filter(
+      (f) => f.geometry.coordinates[0] && f.geometry.coordinates[1]
+    );
+
     const updatedItem = { ...viewItem, data: featureCollection };
     actions.set({ metaRecordId, data: updatedItem });
   }),
