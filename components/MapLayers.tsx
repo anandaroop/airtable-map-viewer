@@ -1,4 +1,5 @@
-import { Map, Marker, Popup, TileLayer, GeoJSON } from "react-leaflet";
+import { GeoJSON, Map, Marker, Popup, TileLayer } from "react-leaflet";
+import { CircleMarker } from "leaflet";
 
 import { useStoreState } from "../store";
 
@@ -6,6 +7,7 @@ const MapLayers = () => {
   const displayableViews = useStoreState((state) => state.views.displayable);
 
   const position = { lat: 40.7, lng: -73.85 };
+
   return (
     <div className="map">
       <Map center={position} zoom={11}>
@@ -14,16 +16,19 @@ const MapLayers = () => {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
         {displayableViews.map((v) => (
-          <GeoJSON data={v.data} />
+          <GeoJSON
+            key={v.metadata["View ID"]}
+            data={v.data}
+            pointToLayer={(point, latLng) => {
+              return new CircleMarker(latLng, {
+                radius: 10,
+                weight: 0.5,
+                color: point.properties["marker-color"] || "blue",
+                fillOpacity: 0.4,
+              }).bindPopup(airtableHyperlinkFor(point));
+            }}
+          />
         ))}
-
-        {/* <Marker position={position}>
-          <Popup>
-            A pretty CSS3 popup.
-            <br />
-            Easily customizable.
-          </Popup>
-        </Marker> */}
       </Map>
 
       <div className="geojson">
@@ -65,6 +70,21 @@ const MapLayers = () => {
       </style>
     </div>
   );
+};
+
+const airtableHyperlinkFor = (point: Feature<Point>) => {
+  const recId = point.id;
+  const viwId = point.properties.viewId;
+  const tblId = point.properties.tableId;
+
+  delete point.properties.viewId;
+  delete point.properties.tableId;
+  const primaryFieldValue = Object.values(point.properties)[0] as string;
+
+  const recordUrl = `https://airtable.com/${tblId}/${viwId}/${recId}`;
+  const abbreviatedLinkText = primaryFieldValue.substr(0, 5);
+
+  return `<a href="${recordUrl}" target="airtable">${abbreviatedLinkText}…</a>`;
 };
 
 export default MapLayers;
