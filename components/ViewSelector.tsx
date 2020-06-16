@@ -16,7 +16,7 @@ export const ViewSelector = () => {
         const { id, fields } = record;
         setViewItem({
           metaRecordId: id,
-          data: { metadata: fields, data: null },
+          data: { metadata: fields, data: null, defaultColor: null },
         });
       });
     }

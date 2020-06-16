@@ -1,18 +1,21 @@
 import {
   action,
   Action,
+  actionOn,
+  ActionOn,
   computed,
   Computed,
   thunk,
   Thunk,
-  ThunkOn,
   thunkOn,
+  ThunkOn,
 } from "easy-peasy";
 import { FeatureCollection } from "geojson";
 
 import { MetaFields } from "../lib/airtable";
 import { toGeoJSONFeatureCollection } from "../lib/geojson";
 import { API } from "../lib/api";
+import palette from "../lib/palette";
 
 export interface ViewsModel {
   // STATE
@@ -58,12 +61,15 @@ export interface ViewsModel {
 
   /** When a view is selected, ensure the data gets fetched if it hasn't already */
   onSelectView: ThunkOn<ViewsModel>;
+
+  /** When the views are update, ensure an appropriate color palette */
+  onSetView: ActionOn<ViewsModel>;
 }
 
 export interface ViewsItem {
   metadata: MetaFields;
-  // TODO: add types
   data: null | FeatureCollection;
+  defaultColor: string;
 }
 
 export const viewsModel: ViewsModel = {
@@ -153,6 +159,16 @@ export const viewsModel: ViewsModel = {
     (actions) => actions.select,
     (actions, target) => {
       actions.load({ metaRecordId: target.payload.metaRecordId });
+    }
+  ),
+
+  onSetView: actionOn(
+    (actions) => actions.set,
+    (state) => {
+      // reassign colors from palette
+      Object.entries(state.items).forEach(([id], idx) => {
+        state.items[id].defaultColor = palette[idx];
+      });
     }
   ),
 };

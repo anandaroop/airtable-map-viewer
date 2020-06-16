@@ -2,12 +2,15 @@ import { GeoJSON, Map, Marker, Popup, TileLayer } from "react-leaflet";
 import { CircleMarker } from "leaflet";
 
 import { useStoreState } from "../store";
+import { Feature, Point } from "geojson";
 
 // show GeoJSON in sidebar?
-const DEBUG = true
+const DEBUG = false;
 
 const MapLayers = () => {
-  const displayableViews = useStoreState((state) => state.views.displayable);
+  const displayableViews = useStoreState(
+    (state) => state.views.displayable
+  );
 
   const position = { lat: 40.7, lng: -73.85 };
 
@@ -24,10 +27,11 @@ const MapLayers = () => {
             data={v.data}
             pointToLayer={(point, latLng) => {
               return new CircleMarker(latLng, {
-                radius: 10,
-                weight: 0.5,
-                color: point.properties["marker-color"] || "blue",
-                fillOpacity: 0.4,
+                radius: 8,
+                weight: 1,
+                color: "white",
+                fillColor: point.properties["marker-color"] || v.defaultColor,
+                fillOpacity: 0.5,
               }).bindPopup(airtableHyperlinkFor(point));
             }}
           />
