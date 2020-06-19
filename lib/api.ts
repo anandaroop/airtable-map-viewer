@@ -21,7 +21,7 @@ export const API = {
       ["viewName", viewName],
       ["primaryFieldName", primaryFieldName],
     ]);
-    const response = await fetch(`/api/views?${params.toString()}`);
+    const response = await fetch(`/api/records?${params.toString()}`);
     const json = await response.json();
     return json;
   },
