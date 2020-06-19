@@ -11,6 +11,8 @@ import {
   ThunkOn,
 } from "easy-peasy";
 import { FeatureCollection } from "geojson";
+import clustersKmeans from "@turf/clusters-kmeans";
+import clustersDbscan from "@turf/clusters-dbscan";
 
 import { MetaFields } from "../lib/airtable";
 import { toGeoJSONFeatureCollection } from "../lib/geojson";
@@ -19,6 +21,8 @@ import palette from "../lib/palette";
 
 export interface ViewsModel {
   // STATE
+
+  debug: boolean,
 
   /**
    * Main store of dynamically loaded View data from Airtable.
@@ -74,6 +78,8 @@ export interface ViewsItem {
 
 export const viewsModel: ViewsModel = {
   // STATE
+
+  debug: false,
 
   items: {},
 
@@ -139,7 +145,7 @@ export const viewsModel: ViewsModel = {
       viewId,
     };
 
-    const featureCollection = toGeoJSONFeatureCollection(
+    let featureCollection = toGeoJSONFeatureCollection(
       records,
       airtableLocation
     );
@@ -148,6 +154,19 @@ export const viewsModel: ViewsModel = {
     featureCollection.features = featureCollection.features.filter(
       (f) => f.geometry.coordinates[0] && f.geometry.coordinates[1]
     );
+
+    // for some views, let's ad-hoc cluster them
+    if (viewId === "viwJGcKgSrTDNX6DP") {
+      // Delivery Recipients: Map
+      console.log("cluster!");
+
+      // create random points with random z-values in their properties
+      const options = { numberOfClusters: 7 };
+      // const clusteredFeatures = clustersKmeans(featureCollection, options);
+      const clusteredFeatures = clustersDbscan(featureCollection, 2, options);
+
+      featureCollection = clusteredFeatures
+    }
 
     const updatedItem = { ...viewItem, data: featureCollection };
     actions.set({ metaRecordId, data: updatedItem });

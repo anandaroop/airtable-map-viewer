@@ -30,4 +30,18 @@ export const chromaFancy = [
   chroma("black").luminance(0.1).hex(),
 ];
 
+export const chromaSaturated = [
+  chroma("royalblue").hex(),
+  chroma("green").hex(),
+  chroma("red").hex(),
+  chroma("orange").hex(),
+  chroma("indigo").hex(),
+  chroma("brown").hex(),
+  // chroma("yellow").hex(),
+  chroma("gray").hex(),
+  chroma("violet").hex(),
+  chroma("black").hex(),
+];
+
 export default chromaFancy;
+export const clusterPalette = chromaSaturated;

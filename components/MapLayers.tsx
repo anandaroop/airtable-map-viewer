@@ -1,16 +1,13 @@
 import { GeoJSON, Map, Marker, Popup, TileLayer } from "react-leaflet";
 import { CircleMarker } from "leaflet";
-
-import { useStoreState } from "../store";
 import { Feature, Point } from "geojson";
 
-// show GeoJSON in sidebar?
-const DEBUG = false;
+import { useStoreState } from "../store";
+import { clusterPalette } from "../lib/palette";
 
 const MapLayers = () => {
-  const displayableViews = useStoreState(
-    (state) => state.views.displayable
-  );
+  const DEBUG = useStoreState((state) => state.views.debug);
+  const displayableViews = useStoreState((state) => state.views.displayable);
 
   const position = { lat: 40.7, lng: -73.85 };
 
@@ -30,7 +27,7 @@ const MapLayers = () => {
                 radius: 8,
                 weight: 1,
                 color: "white",
-                fillColor: point.properties["marker-color"] || v.defaultColor,
+                fillColor: fillColor(point, v.defaultColor),
                 fillOpacity: 0.5,
               }).bindPopup(airtableHyperlinkFor(point));
             }}
@@ -79,6 +76,20 @@ const MapLayers = () => {
       </style>
     </div>
   );
+};
+
+const fillColor = (feature, defaultColor) => {
+  let markerColor, clusterId;
+
+  if ((markerColor = feature.properties["marker-color"])) {
+    return markerColor;
+  }
+
+  if ((clusterId = feature.properties["cluster"])) {
+    return clusterPalette[clusterId];
+  }
+
+  return defaultColor;
 };
 
 const airtableHyperlinkFor = (point: Feature<Point>) => {
