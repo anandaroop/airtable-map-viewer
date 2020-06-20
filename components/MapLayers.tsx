@@ -93,13 +93,13 @@ const fillColor = (feature, defaultColor) => {
 };
 
 const airtableHyperlinkFor = (point: Feature<Point>) => {
-  const recId = point.id;
+  const recId = point.properties.recordId;
   const viwId = point.properties.viewId;
   const tblId = point.properties.tableId;
 
   delete point.properties.viewId;
   delete point.properties.tableId;
-  const primaryFieldValue = Object.values(point.properties)[0] as string;
+  const primaryFieldValue = point.id as string;
 
   const recordUrl = `https://airtable.com/${tblId}/${viwId}/${recId}`;
   const abbreviatedLinkText = primaryFieldValue.substr(0, 5);

@@ -22,7 +22,7 @@ import palette from "../lib/palette";
 export interface ViewsModel {
   // STATE
 
-  debug: boolean,
+  debug: boolean;
 
   /**
    * Main store of dynamically loaded View data from Airtable.
@@ -143,6 +143,7 @@ export const viewsModel: ViewsModel = {
     const airtableLocation = {
       tableId,
       viewId,
+      primaryFieldName,
     };
 
     let featureCollection = toGeoJSONFeatureCollection(
@@ -156,16 +157,12 @@ export const viewsModel: ViewsModel = {
     );
 
     // for some views, let's ad-hoc cluster them
-    if (viewId === "viwJGcKgSrTDNX6DP") {
-      // Delivery Recipients: Map
-      console.log("cluster!");
-
-      // create random points with random z-values in their properties
+    if (viewId === "viwJGcKgSrTDNX6DP") { // Delivery Recipients: Map
       const options = { numberOfClusters: 7 };
       // const clusteredFeatures = clustersKmeans(featureCollection, options);
       const clusteredFeatures = clustersDbscan(featureCollection, 2, options);
 
-      featureCollection = clusteredFeatures
+      featureCollection = clusteredFeatures;
     }
 
     const updatedItem = { ...viewItem, data: featureCollection };
