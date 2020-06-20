@@ -5,7 +5,7 @@ export default function Home() {
     <Head>
       <title>QDSAMA Maps</title>
       <link rel="icon" href="/favicon.ico" />
-      <meta http-equiv="refresh" content="1; url=/volunteers-and-requests" />
+      <meta http-equiv="refresh" content="1; url=/evangel" />
     </Head>
   )
 }

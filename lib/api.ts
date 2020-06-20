@@ -11,18 +11,22 @@ export const API = {
     tableName,
     viewName,
     primaryFieldName,
+    additionalFieldNames = [],
   }: {
     tableName: string;
     viewName: string;
     primaryFieldName: string;
+    additionalFieldNames?: string[];
   }): Promise<Airtable.Record<any>[]> => {
     const params = new URLSearchParams([
       ["tableName", tableName],
       ["viewName", viewName],
       ["primaryFieldName", primaryFieldName],
+      ["additionalFieldNames", additionalFieldNames.join("|")],
     ]);
     const response = await fetch(`/api/records?${params.toString()}`);
     const json = await response.json();
+
     return json;
   },
 };
