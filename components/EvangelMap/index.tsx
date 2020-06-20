@@ -26,22 +26,7 @@ export const EvangelMap = () => {
 
   useEffect(() => {
     async function initialize() {
-      // fetch recipients' metadata
       const views = await API.fetchMetaRecords();
-      const recipientsView = views.filter(
-        (r) => r.fields["View ID"] == "viwJGcKgSrTDNX6DP" // aka Delivery Recipients: Map
-      )[0];
-      setRecipientMetadata({ data: recipientsView.fields });
-
-      // fetch recipient records
-      let recipientRecords = await API.fetchRecordsFromView({
-        tableName: recipientsView.fields["Table name"],
-        viewName: recipientsView.fields["View name"],
-        primaryFieldName: recipientsView.fields["Primary field name"],
-        additionalFieldNames: ["Driver", "Confirmed?", "Notes", "Neighborhood", "Recipient"]
-      });
-
-      setAllRecipientItems({ data: recipientRecords });
 
       // fetch drivers' metadata
       const driversView = views.filter(
@@ -53,10 +38,26 @@ export const EvangelMap = () => {
       const driverRecords = await API.fetchRecordsFromView({
         tableName: driversView.fields["Table name"],
         viewName: driversView.fields["View name"],
+        additionalFieldNames: ["Name"],
         primaryFieldName: driversView.fields["Primary field name"],
       });
-
       setAllDriverItems({ data: driverRecords });
+
+      // fetch recipients' metadata
+      const recipientsView = views.filter(
+        (r) => r.fields["View ID"] == "viwJGcKgSrTDNX6DP" // aka Delivery Recipients: Map
+      )[0];
+      setRecipientMetadata({ data: recipientsView.fields });
+
+      // fetch recipient records
+      let recipientRecords = await API.fetchRecordsFromView({
+        tableName: recipientsView.fields["Table name"],
+        viewName: recipientsView.fields["View name"],
+        primaryFieldName: recipientsView.fields["Primary field name"],
+        additionalFieldNames: ["NameLookup", "Driver", "Confirmed?", "Notes", "Neighborhood"]
+      });
+      setAllRecipientItems({ data: recipientRecords });
+
       touch();
     }
 
@@ -68,7 +69,7 @@ export const EvangelMap = () => {
       <Box flex="1">
         <Info />
       </Box>
-      <Box flex="4">
+      <Box flex="3">
         <MapWithNoSSR />
       </Box>
     </Main>

@@ -4,7 +4,7 @@ import { appModel, AppModel } from "./app";
 import { recipientsModel, RecipientsModel } from "./recipients";
 import { driversModel, DriversModel } from "./drivers";
 
-interface StoreModel {
+export interface StoreModel {
   app: AppModel;
   recipients: RecipientsModel;
   drivers: DriversModel;

@@ -45,3 +45,4 @@ export const chromaSaturated = [
 
 export default chromaFancy;
 export const clusterPalette = chromaSaturated;
+export const driverPalette = chromaSaturated;

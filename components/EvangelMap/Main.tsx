@@ -19,8 +19,24 @@ export const Main = ({ children, direction = "row" }) => {
             box-sizing: border-box;
           }
 
-          p {
-            margin: 1em 0;
+          h1,
+          h2,
+          h3,
+          p,
+          li {
+            margin-top: 1em;
+            margin-bottom: 1em;
+          }
+
+          li {
+            margin-left: 1em;
+          }
+
+          ul {
+          }
+
+          body {
+            font-family: sans-serif;
           }
         `}
       </style>

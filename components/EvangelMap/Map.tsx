@@ -4,10 +4,11 @@ import { CircleMarker } from "leaflet";
 import { Feature, Point } from "geojson";
 
 import { useStoreState } from "./store";
+import { RecipientFields } from "./store/recipients";
 
 const Map = () => {
-  const recipientsGeojson = useStoreState((state) => state.recipients.geojson);
-  const driversGeojson = useStoreState((state) => state.drivers.geojson);
+  const recipients = useStoreState((state) => state.recipients);
+  const drivers = useStoreState((state) => state.drivers);
 
   return (
     <>
@@ -24,24 +25,24 @@ const Map = () => {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
 
-        {recipientsGeojson?.features?.length && (
+        {!!recipients.geojson?.features?.length && (
           <GeoJSON
-            data={recipientsGeojson}
-            pointToLayer={(point, latLng) => {
+            data={recipients.geojson}
+            pointToLayer={(point: Feature<Point, RecipientFields>, latLng) => {
               return new CircleMarker(latLng, {
                 radius: 8,
                 weight: 1,
                 color: "white",
-                fillColor: "orange",
+                fillColor: "gray",
                 fillOpacity: 0.5,
               }).bindPopup(airtableHyperlinkFor(point));
             }}
           />
         )}
 
-        {driversGeojson?.features?.length && (
+        {!!drivers.geojson?.features?.length && (
           <GeoJSON
-            data={driversGeojson}
+            data={drivers.geojson}
             pointToLayer={(point, latLng) => {
               return new CircleMarker(latLng, {
                 radius: 8,

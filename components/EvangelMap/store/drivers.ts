@@ -15,12 +15,22 @@ import {
 import { FeatureCollection, Feature, Point } from "geojson";
 import { toGeoJSONFeatureCollection } from "../../../lib/geojson";
 import { MetaFields } from "../../../lib/airtable";
+import { StoreModel } from "./index";
+import { RecipientRecord } from "./recipients";
+
+export type DriverRecord = Airtable.Record<{
+  Name: string;
+}>;
 
 export interface DriversModel {
   // STATE
 
   items: {
     [recordId: string]: DriverRecord;
+  };
+
+  itineraries: {
+    [recordId: string]: RecipientRecord[];
   };
 
   /** Meta info from Airtable's Meta table */
@@ -40,15 +50,21 @@ export interface DriversModel {
   /** Set metadata from Meta table */
   setMetadata: Action<DriversModel, { data: MetaFields }>;
 
-  // LISTENERS
-}
+  /** Recalculate routes based on Recipient/Driver data */
+  updateItineraries: Action<DriversModel, { data: RecipientRecord[] }>;
 
-type DriverRecord = any;
+  // LISTENERS
+
+  /** Listen for updates, in order to update itineraries */
+  onRecipientOrDriverUpdate: ThunkOn<DriversModel, any, StoreModel>;
+}
 
 export const driversModel: DriversModel = {
   // STATE
 
   items: {},
+
+  itineraries: {},
 
   metadata: null,
 
@@ -87,5 +103,34 @@ export const driversModel: DriversModel = {
     state.metadata = data;
   }),
 
+  updateItineraries: action((state, payload) => {
+    const recipients = payload.data;
+    recipients.forEach((recipient) => {
+      if (recipient.fields.Driver?.length) {
+        const driverId = recipient.fields.Driver[0];
+        state.itineraries[driverId] = state.itineraries[driverId] || [];
+        state.itineraries[driverId].push(recipient);
+      }
+    });
+  }),
+
   // LISTENERS
+
+  onRecipientOrDriverUpdate: thunkOn(
+    (_actions, storeActions) => [
+      storeActions.recipients.set,
+      storeActions.recipients.setAll,
+      storeActions.drivers.set,
+      storeActions.drivers.setAll,
+    ],
+    (actions, _target, { getStoreState }) => {
+      const state = getStoreState();
+      const drivers = Object.values(state.drivers.items);
+      const recipients = Object.values(state.recipients.items);
+
+      if (drivers.length > 0 && recipients.length > 0) {
+        actions.updateItineraries({ data: recipients });
+      }
+    }
+  ),
 };
