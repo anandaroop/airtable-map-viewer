@@ -58,6 +58,10 @@ const toGeoJSONFeature = (
       o: { lat, lng },
     } = geodata;
 
+    if (lat === undefined || lng === undefined) {
+      console.error("LatLng appears to be undefined. Showing geodata and record:", geodata, record)
+    }
+
     // munge airtable metainfo for hyperlink building
     const { tableId, viewId, primaryFieldName } = options;
     const recordId = record.id;
