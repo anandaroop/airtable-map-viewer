@@ -97,8 +97,8 @@ export const EvangelMap = () => {
           h3,
           p,
           li {
-            margin-top: 1em;
-            margin-bottom: 1em;
+            padding-top: 0.5em;
+            padding-bottom: 0.5em;
           }
 
           li {

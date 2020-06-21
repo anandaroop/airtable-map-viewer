@@ -75,7 +75,12 @@ const DriverList: React.FC<{
         {drivers.map((driver) => {
           const recipientItinerary = itineraryMap[driver.id];
           return (
-            <Driver key={driver.id} driver={driver}>
+            <Driver
+              key={driver.id}
+              driver={driver}
+              markerMap={markerMap}
+              itineraryMap={itineraryMap}
+            >
               {recipientItinerary?.map((recipient) => (
                 <Recipient
                   key={recipient.id}
@@ -93,9 +98,30 @@ const DriverList: React.FC<{
   );
 };
 
-const Driver: React.FC<{ driver: DriverRecord }> = ({ driver, children }) => {
+const Driver: React.FC<{
+  driver: DriverRecord;
+  itineraryMap: DriversModel["itineraryMap"];
+  markerMap: RecipientsModel["markerMap"];
+}> = ({ driver, children, markerMap, itineraryMap }) => {
+  const recipientIds = itineraryMap[driver.id]?.map((r) => r.id);
+  const allOtherMarkers = Object.entries(markerMap).reduce(
+    (acc, [recipientId, marker]) => {
+      if (!recipientIds?.includes(recipientId)) acc.push(marker);
+      return acc;
+    },
+    []
+  );
+
   return (
-    <div key={driver.id}>
+    <div
+      key={driver.id}
+      onMouseEnter={() => {
+        allOtherMarkers.map((m) => m.setRadius(5));
+      }}
+      onMouseLeave={() => {
+        allOtherMarkers.map((m) => m.setRadius(8));
+      }}
+    >
       <p>
         <strong>{driver.fields.Name}</strong>
       </p>
@@ -148,7 +174,7 @@ const Recipient: React.FC<{
         {`
           .recipientName {
             font-weight: bold;
-            margin: 0 0 1em 0;
+            padding: 0 0 1em 0;
           }
 
           dl {
