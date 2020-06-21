@@ -18,6 +18,7 @@ import { MetaFields } from "../../../lib/airtable";
 import { StoreModel } from "./index";
 import { DriversModel } from "./drivers";
 import { driverPalette } from "../../../lib/palette";
+import { CircleMarker } from "leaflet";
 
 export interface RecipientFields {
   /** Name lookup for the linked Request table record */
@@ -74,7 +75,12 @@ export interface RecipientsModel {
 
   /** Mapping of driver IDs to colors */
   colorMap: {
-    [recordId: string]: string;
+    [driverRecordId: string]: string;
+  };
+
+  /** Mapping of recipient IDs to instantiated Leaflet markers */
+  markerMap: {
+    [recordId: string]: CircleMarker;
   };
 
   /** True if Features have been assigned distinct "marker-color" per driver */
@@ -93,6 +99,12 @@ export interface RecipientsModel {
 
   /** Color-code the recipients according to assigned driver */
   colorize: Action<RecipientsModel, { data: DriversModel["items"] }>;
+
+  /** Color-code the recipients according to assigned driver */
+  setMarker: Action<
+    RecipientsModel,
+    { recordId: string; marker: CircleMarker }
+  >;
 
   // LISTENERS
 
@@ -138,6 +150,8 @@ export const recipientsModel: RecipientsModel = {
 
   colorMap: {},
 
+  markerMap: {},
+
   isColorCoded: false,
 
   // ACTIONS
@@ -169,6 +183,11 @@ export const recipientsModel: RecipientsModel = {
 
     state.colorMap = colorMap;
     state.isColorCoded = true;
+  }),
+
+  setMarker: action((state, payload) => {
+    const { recordId, marker } = payload;
+    state.markerMap[recordId] = marker;
   }),
 
   // LISTENERS

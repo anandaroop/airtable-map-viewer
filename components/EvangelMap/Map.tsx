@@ -3,12 +3,13 @@ import { GeoJSON, Map as ReactLeafletMap, TileLayer } from "react-leaflet";
 import { CircleMarker } from "leaflet";
 import { Feature, Point } from "geojson";
 
-import { useStoreState } from "./store";
+import { useStoreState, useStoreActions } from "./store";
 import { RecipientFields } from "./store/recipients";
 
 const Map = () => {
   const recipients = useStoreState((state) => state.recipients);
   const drivers = useStoreState((state) => state.drivers);
+  const recipientActions = useStoreActions((actions) => actions.recipients);
 
   return (
     <>
@@ -28,16 +29,26 @@ const Map = () => {
 
           <GeoJSON
             data={recipients.geojson}
-            pointToLayer={(point: Feature<Point, RecipientFields>, latLng) => {
+            pointToLayer={(
+              point: Feature<Point, RecipientFields & { recordId: string }>,
+              latLng
+            ) => {
               const fillColor = point.properties["marker-color"] || "gray";
 
-              return new CircleMarker(latLng, {
+              const marker = new CircleMarker(latLng, {
                 radius: 8,
                 weight: 1,
                 color: "white",
                 fillColor,
                 fillOpacity: 0.5,
               }).bindPopup(airtableHyperlinkFor(point));
+
+              recipientActions.setMarker({
+                recordId: point.properties.recordId,
+                marker: marker
+              });
+
+              return marker;
             }}
           />
 
