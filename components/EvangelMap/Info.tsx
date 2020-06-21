@@ -4,7 +4,7 @@ import { RecipientsModel, RecipientRecord } from "./store/recipients";
 import { DriversModel, DriverRecord } from "./store/drivers";
 
 export const Info = () => {
-  const recipientItems = useStoreState((state) => state.recipients.items);
+  // const recipientItems = useStoreState((state) => state.recipients.items);
   const recipientCounts = useStoreState((state) => state.recipients.counts);
   const colorMap = useStoreState((state) => state.recipients.colorMap);
   const markerMap = useStoreState((state) => state.recipients.markerMap);
@@ -15,10 +15,11 @@ export const Info = () => {
   return (
     <>
       <div className="info">
-        <RecipientSummary
-          recipientItems={recipientItems}
-          counts={recipientCounts}
-        />
+        <p>
+          Recipients: {recipientCounts.assigned} assigned /{" "}
+          {recipientCounts.unassigned} unassigned
+        </p>
+        <p>Drivers: {Object.keys(driverItems).length}</p>
         <DriverList
           driverItems={driverItems}
           colorMap={colorMap}
@@ -28,32 +29,11 @@ export const Info = () => {
       </div>
       <style jsx>{`
         div.info {
-          width: 100%;
+          width: calc(100% - 1em);
           padding: 0 1em;
           overflow: scroll;
         }
       `}</style>
-    </>
-  );
-};
-
-const RecipientSummary: React.FC<{
-  recipientItems: RecipientsModel["items"];
-  counts: {
-    assigned: number;
-    unassigned: number;
-  };
-}> = ({ recipientItems, counts }) => {
-  const recipients = Object.values(recipientItems);
-  return (
-    <>
-      <h2>
-        Recipients <span style={{ color: "#ccc" }}>({recipients.length})</span>
-      </h2>
-      <ul>
-        <li>{counts.assigned} assigned</li>
-        <li>{counts.unassigned} unassigned</li>
-      </ul>
     </>
   );
 };
@@ -67,43 +47,51 @@ const DriverList: React.FC<{
   const drivers = Object.values(driverItems);
 
   return (
-    <>
-      <h2 style={{ marginTop: "2em" }}>
-        Drivers <span style={{ color: "#ccc" }}>({drivers.length})</span>
-      </h2>
-      <div>
-        {drivers.map((driver) => {
-          const recipientItinerary = itineraryMap[driver.id];
-          return (
-            <Driver
-              key={driver.id}
-              driver={driver}
-              markerMap={markerMap}
-              itineraryMap={itineraryMap}
-            >
-              {recipientItinerary?.map((recipient) => (
-                <Recipient
-                  key={recipient.id}
-                  recipient={recipient}
-                  driver={driver}
-                  colorMap={colorMap}
-                  markerMap={markerMap}
-                />
-              ))}
-            </Driver>
-          );
-        })}
-      </div>
-    </>
+    <div className="driver-list">
+      {drivers.map((driver) => {
+        const recipientItinerary = itineraryMap[driver.id];
+        return (
+          <Driver
+            key={driver.id}
+            driver={driver}
+            colorMap={colorMap}
+            markerMap={markerMap}
+            itineraryMap={itineraryMap}
+          >
+            {recipientItinerary?.map((recipient) => (
+              <Recipient
+                key={recipient.id}
+                recipient={recipient}
+                driver={driver}
+                colorMap={colorMap}
+                markerMap={markerMap}
+              />
+            ))}
+          </Driver>
+        );
+      })}
+      <style jsx>{`
+        .driver-list {
+        }
+      `}</style>
+    </div>
   );
 };
 
 const Driver: React.FC<{
   driver: DriverRecord;
+  colorMap: RecipientsModel["colorMap"];
   itineraryMap: DriversModel["itineraryMap"];
   markerMap: RecipientsModel["markerMap"];
-}> = ({ driver, children, markerMap, itineraryMap }) => {
+}> = ({ driver, children, markerMap, itineraryMap, colorMap }) => {
   const recipientIds = itineraryMap[driver.id]?.map((r) => r.id);
+  const theseMarkers = Object.entries(markerMap).reduce(
+    (acc, [recipientId, marker]) => {
+      if (recipientIds?.includes(recipientId)) acc.push(marker);
+      return acc;
+    },
+    []
+  );
   const allOtherMarkers = Object.entries(markerMap).reduce(
     (acc, [recipientId, marker]) => {
       if (!recipientIds?.includes(recipientId)) acc.push(marker);
@@ -111,24 +99,38 @@ const Driver: React.FC<{
     },
     []
   );
+  const color = colorMap[driver.id];
 
   return (
     <div
+      className="driver"
       key={driver.id}
       onMouseEnter={() => {
-        allOtherMarkers.map((m) => m.setRadius(5));
+        theseMarkers.map((m) => m.setRadius(16));
+        allOtherMarkers.map((m) => m.setRadius(4));
       }}
       onMouseLeave={() => {
+        theseMarkers.map((m) => m.setRadius(8));
         allOtherMarkers.map((m) => m.setRadius(8));
       }}
     >
-      <p>
-        <strong>{driver.fields.Name}</strong>
-      </p>
+      <div className="driverName">{driver.fields.Name}</div>
       <ul>{children}</ul>
       <style jsx>{`
+        .driver {
+          padding-top: 1em;
+        }
+        .driverName {
+          font-weight: bold;
+          background: ${color}cc;
+          color: white;
+          padding: 0.25em 0.5em;
+        }
+
         ul {
           list-style: none;
+          border-left: solid 1px ${color};
+          color: #333;
         }
       `}</style>
     </div>
@@ -147,47 +149,85 @@ const Recipient: React.FC<{
     <li
       key={recipient.id}
       onMouseEnter={(e) => {
-        marker.setRadius(16);
+        marker.setRadius(24);
       }}
       onMouseLeave={(e) => {
-        marker.setRadius(8);
+        marker.setRadius(16);
       }}
     >
       <div className="recipientName" style={{ color: colorMap[driver.id] }}>
         {recipient.fields.NameLookup[0]}
         {recipient.fields["Confirmed?"] ? " ✓ " : " ﹖ "}
       </div>
-      <dl>
-        {/* <dt>Address</dt> */}
-        <dd>{geodata.o.formattedAddress}</dd>
-        {/* <dt>Phone</dt> */}
-        <dd>
+      <div>
+        <div className="address">
+          <strong>
+            <a
+              target="gmap"
+              href={encodeURI(
+                `https://www.google.com/maps/dir/${geodata.o.formattedAddress}`
+              )}
+            >
+              {recipient.fields["Address (computed)"]}
+            </a>
+          </strong>
+        </div>
+
+        <div className="phone">
           {recipient.fields.Phone?.[0]}{" "}
-          {recipient.fields["Whatsapp Only"]?.[0] && " (⚠️ WhatsApp only)"}
-        </dd>
-        <dd></dd>
-        <dt>Notes</dt>
-        <dd>{recipient.fields.Notes}</dd>
-      </dl>
+          {recipient.fields["Whatsapp Only"]?.[0] && (
+            <span className="whatsapp-warning">⚠️ WhatsApp only</span>
+          )}
+        </div>
+
+        {recipient.fields.Notes && (
+          <div className="notes">
+            <span className="header">NOTES</span>{" "}
+            <span className="body">{recipient.fields.Notes}</span>
+          </div>
+        )}
+      </div>
 
       <style jsx>
         {`
           .recipientName {
             font-weight: bold;
-            padding: 0 0 1em 0;
+            padding-bottom: 0.5em;
           }
 
-          dl {
+          .address {
+            padding: 0.25em 0;
           }
 
-          dt {
-            opacity: 0.5;
-            font-size: 0.75em;
+          .address a {
+            color: blue;
+          }
+
+          .phone {
+            padding: 0.25em 0;
+          }
+
+          .whatsapp-warning {
+            opacity: 0.6;
+            padding-left: 0.25em;
+          }
+
+          .notes {
+            padding: 0.5em 0;
+          }
+
+          .notes .header {
             font-weight: bold;
+            font-size: 80%;
+            color: #999;
           }
-          dd {
-            padding: 0.25em 0 0.25em 1em;
+
+          .notes .body {
+            font-style: italic;
+            color: #666;
           }
+
+          .notes::content
         `}
       </style>
     </li>

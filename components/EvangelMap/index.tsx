@@ -76,11 +76,11 @@ export const EvangelMap = () => {
   return (
     <>
       <Main direction="row">
-        <Box flex="1">
-          <Info />
-        </Box>
         <Box flex="3">
           <MapWithNoSSR />
+        </Box>
+        <Box flex="1">
+          <Info />
         </Box>
       </Main>
 
