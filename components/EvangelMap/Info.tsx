@@ -7,6 +7,7 @@ export const Info = () => {
   const recipientItems = useStoreState((state) => state.recipients.items);
   const recipientCounts = useStoreState((state) => state.recipients.counts);
   const colorMap = useStoreState((state) => state.recipients.colorMap);
+  const markerMap = useStoreState((state) => state.recipients.markerMap);
 
   const driverItems = useStoreState((state) => state.drivers.items);
   const itineraryMap = useStoreState((state) => state.drivers.itineraryMap);
@@ -22,6 +23,7 @@ export const Info = () => {
           driverItems={driverItems}
           colorMap={colorMap}
           itineraryMap={itineraryMap}
+          markerMap={markerMap}
         />
       </div>
       <style jsx>{`
@@ -60,7 +62,8 @@ const DriverList: React.FC<{
   driverItems: DriversModel["items"];
   colorMap: RecipientsModel["colorMap"];
   itineraryMap: DriversModel["itineraryMap"];
-}> = ({ driverItems, colorMap, itineraryMap }) => {
+  markerMap: RecipientsModel["markerMap"];
+}> = ({ driverItems, colorMap, itineraryMap, markerMap }) => {
   const drivers = Object.values(driverItems);
 
   return (
@@ -79,6 +82,7 @@ const DriverList: React.FC<{
                   recipient={recipient}
                   driver={driver}
                   colorMap={colorMap}
+                  markerMap={markerMap}
                 />
               ))}
             </Driver>
@@ -109,10 +113,20 @@ const Recipient: React.FC<{
   recipient: RecipientRecord;
   driver: DriverRecord;
   colorMap: RecipientsModel["colorMap"];
-}> = ({ recipient, driver, colorMap }) => {
+  markerMap: RecipientsModel["markerMap"];
+}> = ({ recipient, driver, colorMap, markerMap }) => {
   const geodata = decodeAirtableGeodata(recipient.fields["Geocode cache"]);
+  const marker = markerMap[recipient.id];
   return (
-    <li key={recipient.id}>
+    <li
+      key={recipient.id}
+      onMouseEnter={(e) => {
+        marker.setRadius(16);
+      }}
+      onMouseLeave={(e) => {
+        marker.setRadius(8);
+      }}
+    >
       <div className="recipientName" style={{ color: colorMap[driver.id] }}>
         {recipient.fields.NameLookup[0]}
         {recipient.fields["Confirmed?"] ? " ✓ " : " ﹖ "}
