@@ -29,7 +29,7 @@ export interface DriversModel {
     [recordId: string]: DriverRecord;
   };
 
-  itineraries: {
+  itineraryMap: {
     [recordId: string]: RecipientRecord[];
   };
 
@@ -64,7 +64,7 @@ export const driversModel: DriversModel = {
 
   items: {},
 
-  itineraries: {},
+  itineraryMap: {},
 
   metadata: null,
 
@@ -108,8 +108,8 @@ export const driversModel: DriversModel = {
     recipients.forEach((recipient) => {
       if (recipient.fields.Driver?.length) {
         const driverId = recipient.fields.Driver[0];
-        state.itineraries[driverId] = state.itineraries[driverId] || [];
-        state.itineraries[driverId].push(recipient);
+        state.itineraryMap[driverId] = state.itineraryMap[driverId] || [];
+        state.itineraryMap[driverId].push(recipient);
       }
     });
   }),

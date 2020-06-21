@@ -1,18 +1,28 @@
 import { useStoreState } from "./store";
-import { DriversModel } from "./store/drivers";
-import { RecipientsModel } from "./store/recipients";
 import { decodeAirtableGeodata } from "../../lib/geojson";
+import { RecipientsModel, RecipientRecord } from "./store/recipients";
+import { DriversModel, DriverRecord } from "./store/drivers";
 
 export const Info = () => {
-  const recipients = useStoreState((state) => state.recipients);
-  const drivers = useStoreState((state) => state.drivers);
+  const recipientItems = useStoreState((state) => state.recipients.items);
+  const recipientCounts = useStoreState((state) => state.recipients.counts);
+  const colorMap = useStoreState((state) => state.recipients.colorMap);
+
+  const driverItems = useStoreState((state) => state.drivers.items);
+  const itineraryMap = useStoreState((state) => state.drivers.itineraryMap);
 
   return (
     <>
       <div className="info">
-        <h1>Airtable Summary</h1>
-        <RecipientsList recipients={recipients} />
-        <DriverList drivers={drivers} recipients={recipients} />
+        <RecipientSummary
+          recipientItems={recipientItems}
+          counts={recipientCounts}
+        />
+        <DriverList
+          driverItems={driverItems}
+          colorMap={colorMap}
+          itineraryMap={itineraryMap}
+        />
       </div>
       <style jsx>{`
         div.info {
@@ -25,101 +35,121 @@ export const Info = () => {
   );
 };
 
-const RecipientsList: React.FC<{
-  recipients: Pick<RecipientsModel, any>;
-}> = ({ recipients }) => {
+const RecipientSummary: React.FC<{
+  recipientItems: RecipientsModel["items"];
+  counts: {
+    assigned: number;
+    unassigned: number;
+  };
+}> = ({ recipientItems, counts }) => {
+  const recipients = Object.values(recipientItems);
   return (
     <>
       <h2>
-        Recipients{" "}
-        <span style={{ color: "#ccc" }}>
-          ({Object.values(recipients.items).length})
-        </span>
+        Recipients <span style={{ color: "#ccc" }}>({recipients.length})</span>
       </h2>
       <ul>
-        <li>{recipients.counts.assigned} assigned</li>
-        <li>{recipients.counts.unassigned} unassigned</li>
+        <li>{counts.assigned} assigned</li>
+        <li>{counts.unassigned} unassigned</li>
       </ul>
     </>
   );
 };
 
 const DriverList: React.FC<{
-  drivers: Pick<DriversModel, "items" | "itineraries">;
-  recipients: Pick<RecipientsModel, "colorMap">;
-}> = ({ drivers, recipients }) => {
+  driverItems: DriversModel["items"];
+  colorMap: RecipientsModel["colorMap"];
+  itineraryMap: DriversModel["itineraryMap"];
+}> = ({ driverItems, colorMap, itineraryMap }) => {
+  const drivers = Object.values(driverItems);
+
   return (
     <>
       <h2 style={{ marginTop: "2em" }}>
-        Drivers{" "}
-        <span style={{ color: "#ccc" }}>
-          ({Object.values(drivers.items).length})
-        </span>
+        Drivers <span style={{ color: "#ccc" }}>({drivers.length})</span>
       </h2>
       <div>
-        {Object.values(drivers.items).map((driver) => {
+        {drivers.map((driver) => {
+          const recipientItinerary = itineraryMap[driver.id];
           return (
-            <div key={driver.id}>
-              <p>
-                <strong>{driver.fields.Name}</strong>
-              </p>
-              <ul>
-                {drivers.itineraries[driver.id]?.map((recipient) => {
-                  const geodata = decodeAirtableGeodata(
-                    recipient.fields["Geocode cache"]
-                  );
-                  return (
-                    <li key={recipient.id}>
-                      <div
-                        className="recipientName"
-                        style={{ color: recipients.colorMap[driver.id] }}
-                      >
-                        {recipient.fields.NameLookup[0]}
-                        {recipient.fields["Confirmed?"] ? " ✓ " : " ﹖ "}
-                      </div>
-                      <dl>
-                        {/* <dt>Address</dt> */}
-                        <dd>{geodata.o.formattedAddress}</dd>
-                        {/* <dt>Phone</dt> */}
-                        <dd>
-                          {recipient.fields.Phone?.[0]}{" "}
-                          {recipient.fields["Whatsapp Only"]?.[0] &&
-                            " (⚠️ WhatsApp only)"}
-                        </dd>
-                        <dd></dd>
-                        <dt>Notes</dt>
-                        <dd>{recipient.fields.Notes}</dd>
-                      </dl>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+            <Driver key={driver.id} driver={driver}>
+              {recipientItinerary?.map((recipient) => (
+                <Recipient
+                  key={recipient.id}
+                  recipient={recipient}
+                  driver={driver}
+                  colorMap={colorMap}
+                />
+              ))}
+            </Driver>
           );
         })}
       </div>
+    </>
+  );
+};
+
+const Driver: React.FC<{ driver: DriverRecord }> = ({ driver, children }) => {
+  return (
+    <div key={driver.id}>
+      <p>
+        <strong>{driver.fields.Name}</strong>
+      </p>
+      <ul>{children}</ul>
       <style jsx>{`
         ul {
           list-style: none;
         }
-
-        .recipientName {
-          font-weight: bold;
-          margin: 0 0 1em 0;
-        }
-
-        dl {
-        }
-
-        dt {
-          opacity: 0.5;
-          font-size: 0.75em;
-          font-weight: bold;
-        }
-        dd {
-          padding: 0.25em 0 0.25em 1em;
-        }
       `}</style>
-    </>
+    </div>
+  );
+};
+
+const Recipient: React.FC<{
+  recipient: RecipientRecord;
+  driver: DriverRecord;
+  colorMap: RecipientsModel["colorMap"];
+}> = ({ recipient, driver, colorMap }) => {
+  const geodata = decodeAirtableGeodata(recipient.fields["Geocode cache"]);
+  return (
+    <li key={recipient.id}>
+      <div className="recipientName" style={{ color: colorMap[driver.id] }}>
+        {recipient.fields.NameLookup[0]}
+        {recipient.fields["Confirmed?"] ? " ✓ " : " ﹖ "}
+      </div>
+      <dl>
+        {/* <dt>Address</dt> */}
+        <dd>{geodata.o.formattedAddress}</dd>
+        {/* <dt>Phone</dt> */}
+        <dd>
+          {recipient.fields.Phone?.[0]}{" "}
+          {recipient.fields["Whatsapp Only"]?.[0] && " (⚠️ WhatsApp only)"}
+        </dd>
+        <dd></dd>
+        <dt>Notes</dt>
+        <dd>{recipient.fields.Notes}</dd>
+      </dl>
+
+      <style jsx>
+        {`
+          .recipientName {
+            font-weight: bold;
+            margin: 0 0 1em 0;
+          }
+
+          dl {
+          }
+
+          dt {
+            opacity: 0.5;
+            font-size: 0.75em;
+            font-weight: bold;
+          }
+          dd {
+            padding: 0.25em 0 0.25em 1em;
+          }
+        `}
+      </style>
+    </li>
   );
 };
