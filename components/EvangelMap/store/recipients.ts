@@ -16,7 +16,8 @@ import { FeatureCollection, Feature, Point } from "geojson";
 import { toGeoJSONFeatureCollection } from "../../../lib/geojson";
 import { MetaFields } from "../../../lib/airtable";
 import { StoreModel } from "./index";
-import { DriverRecord } from "./drivers";
+import { DriversModel } from "./drivers";
+import { driverPalette } from "../../../lib/palette";
 
 export interface RecipientFields {
   /** Name lookup for the linked Request table record */
@@ -44,6 +45,7 @@ export interface RecipientsModel {
     [recordId: string]: RecipientRecord;
   };
 
+  /** Computed tally of assigned/unassigned, etc */
   counts: Computed<
     RecipientsModel,
     {
@@ -58,6 +60,14 @@ export interface RecipientsModel {
   /** Memoized GeoJSON representation of records */
   geojson: Computed<RecipientsModel, FeatureCollection<Point, any>>;
 
+  /** Mapping of driver IDs to colors */
+  colorMap: {
+    [recordId: string]: string;
+  };
+
+  /** True if Features have been assigned distinct "marker-color" per driver */
+  isColorCoded: boolean;
+
   // ACTIONS
 
   /** Set an individual item in the store by key/value */
@@ -70,7 +80,7 @@ export interface RecipientsModel {
   setMetadata: Action<RecipientsModel, { data: MetaFields }>;
 
   /** Color-code the recipients according to assigned driver */
-  colorize: Action<RecipientsModel, { data: DriverRecord[] }>;
+  colorize: Action<RecipientsModel, { data: DriversModel["items"] }>;
 
   // LISTENERS
 
@@ -106,9 +116,17 @@ export const recipientsModel: RecipientsModel = {
         tableId,
         viewId,
         primaryFieldName,
+        colorizer: (record: Airtable.Record<RecipientFields>) => {
+          const driverId = record.fields.Driver?.[0];
+          return state.colorMap[driverId];
+        },
       });
     }
   }),
+
+  colorMap: {},
+
+  isColorCoded: false,
 
   // ACTIONS
 
@@ -131,7 +149,14 @@ export const recipientsModel: RecipientsModel = {
 
   colorize: action((state, payload) => {
     const drivers = payload.data;
-    console.log("colorize!", drivers);
+    const driverIds = Object.keys(drivers);
+    const colorMap = driverIds.reduce((acc, val) => {
+      acc[val] = driverPalette[driverIds.indexOf(val)];
+      return acc;
+    }, {});
+
+    state.colorMap = colorMap;
+    state.isColorCoded = true;
   }),
 
   // LISTENERS
@@ -139,7 +164,7 @@ export const recipientsModel: RecipientsModel = {
     (_actions, storeActions) => [storeActions.drivers.updateItineraries],
     (actions, _target, { getStoreState }) => {
       const state = getStoreState();
-      const drivers = Object.values(state.drivers.items);
+      const drivers = state.drivers.items;
 
       actions.colorize({ data: drivers });
     }

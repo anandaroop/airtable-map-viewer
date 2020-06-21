@@ -19,28 +19,28 @@ const Map = () => {
         />
       </Head>
 
-      <ReactLeafletMap center={{ lat: 40.7, lng: -73.85 }} zoom={11}>
-        <TileLayer
-          attribution=' &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        />
+      {recipients.isColorCoded && (
+        <ReactLeafletMap center={{ lat: 40.7, lng: -73.85 }} zoom={11}>
+          <TileLayer
+            attribution=' &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          />
 
-        {!!recipients.geojson?.features?.length && (
           <GeoJSON
             data={recipients.geojson}
             pointToLayer={(point: Feature<Point, RecipientFields>, latLng) => {
+              const fillColor = point.properties["marker-color"] || "gray";
+
               return new CircleMarker(latLng, {
                 radius: 8,
                 weight: 1,
                 color: "white",
-                fillColor: "gray",
+                fillColor,
                 fillOpacity: 0.5,
               }).bindPopup(airtableHyperlinkFor(point));
             }}
           />
-        )}
 
-        {!!drivers.geojson?.features?.length && (
           <GeoJSON
             data={drivers.geojson}
             pointToLayer={(point, latLng) => {
@@ -53,8 +53,8 @@ const Map = () => {
               }).bindPopup(airtableHyperlinkFor(point));
             }}
           />
-        )}
-      </ReactLeafletMap>
+        </ReactLeafletMap>
+      )}
 
       <style jsx global>
         {`

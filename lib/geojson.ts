@@ -18,14 +18,15 @@ export const decodeAirtableGeodata = (value: string): AirtableCachedGeocode => {
  */
 export const toGeoJSONFeatureCollection = (
   records: Records<any>,
-  airtableLocation: {
+  options: {
     tableId: string;
     viewId: string;
     primaryFieldName: string;
+    colorizer?: (record: Record<any>) => string;
   }
 ) => {
   const features = records
-    .map((record) => toGeoJSONFeature(record, airtableLocation))
+    .map((record) => toGeoJSONFeature(record, options))
     .filter(Boolean) as Feature<Point>[];
 
   const featureCollection: FeatureCollection<Point> = {
@@ -41,12 +42,14 @@ export const toGeoJSONFeatureCollection = (
  */
 const toGeoJSONFeature = (
   record: Record<any>,
-  airtableLocation: {
+  options: {
     tableId: string;
     viewId: string;
     primaryFieldName: string;
+    colorizer?: (record: Record<any>) => string;
   }
 ) => {
+  const colorizer = options.colorizer || ((_record) => "green");
   try {
     // munge geodata
     const cachedGeocoderResult = record.fields["Geocode cache"];
@@ -56,7 +59,7 @@ const toGeoJSONFeature = (
     } = geodata;
 
     // munge airtable metainfo for hyperlink building
-    const { tableId, viewId, primaryFieldName } = airtableLocation;
+    const { tableId, viewId, primaryFieldName } = options;
     const recordId = record.id;
 
     const feature: Feature<Point> = {
@@ -67,6 +70,7 @@ const toGeoJSONFeature = (
         tableId,
         viewId,
         recordId,
+        "marker-color": colorizer(record),
       },
       geometry: {
         type: "Point",
