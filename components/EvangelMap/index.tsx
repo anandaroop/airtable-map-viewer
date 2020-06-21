@@ -54,7 +54,16 @@ export const EvangelMap = () => {
         tableName: recipientsView.fields["Table name"],
         viewName: recipientsView.fields["View name"],
         primaryFieldName: recipientsView.fields["Primary field name"],
-        additionalFieldNames: ["NameLookup", "Driver", "Confirmed?", "Notes", "Neighborhood"]
+        additionalFieldNames: [
+          "Address (computed)",
+          "Confirmed?",
+          "Driver",
+          "NameLookup",
+          "Neighborhood",
+          "Notes",
+          "Phone",
+          "Whatsapp Only",
+        ],
       });
       setAllRecipientItems({ data: recipientRecords });
 
@@ -65,13 +74,45 @@ export const EvangelMap = () => {
   }, []);
 
   return (
-    <Main direction="row">
-      <Box flex="1">
-        <Info />
-      </Box>
-      <Box flex="3">
-        <MapWithNoSSR />
-      </Box>
-    </Main>
+    <>
+      <Main direction="row">
+        <Box flex="1">
+          <Info />
+        </Box>
+        <Box flex="3">
+          <MapWithNoSSR />
+        </Box>
+      </Main>
+
+      <style jsx global>
+        {`
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+
+          h1,
+          h2,
+          h3,
+          p,
+          li {
+            margin-top: 1em;
+            margin-bottom: 1em;
+          }
+
+          li {
+            margin-left: 1em;
+          }
+
+          ul {
+          }
+
+          body {
+            font-family: sans-serif;
+          }
+        `}
+      </style>
+    </>
   );
 };

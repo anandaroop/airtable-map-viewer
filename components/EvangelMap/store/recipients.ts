@@ -26,7 +26,7 @@ export interface RecipientFields {
   /** ID of the linked Volunteer table record for this driver */
   Driver: string[];
 
-  /** A point person has confirmed they want this delivery */
+  /** True if point person has confirmed they want this delivery */
   "Confirmed?": boolean;
 
   /** Useful notes for driver */
@@ -34,6 +34,18 @@ export interface RecipientFields {
 
   /** ID of the linked Neighborhood table record for this driver */
   Neighborhood: string[];
+
+  /** Phone lookup for the linked Request table record */
+  Phone: string[];
+
+  /** WhatsApp lookup for the linked Request table record */
+  "Whatsapp Only": boolean[];
+
+  /** Best address */
+  "Address (computed)": string;
+
+  /** Geocoded address, encoded */
+  "Geocode cache": string;
 }
 
 export type RecipientRecord = Airtable.Record<RecipientFields>;
