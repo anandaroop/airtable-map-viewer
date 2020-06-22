@@ -58,11 +58,13 @@ const Map = () => {
 
           <GeoJSON
             data={drivers.geojson}
-            pointToLayer={(point, latLng) => {
+            pointToLayer={(point: Feature<Point>, latLng) => {
+              const color = recipients.colorMap[point.properties.recordId] || "gray"
+
               return new CircleMarker(latLng, {
+                color,
                 radius: 8,
-                weight: 2,
-                color: "blue",
+                weight: 4,
                 opacity: 0.75,
                 fillColor: "transparent",
               }).bindPopup(airtableHyperlinkFor(point));
