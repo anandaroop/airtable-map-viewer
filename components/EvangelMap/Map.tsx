@@ -21,7 +21,11 @@ const Map = () => {
       </Head>
 
       {recipients.isColorCoded && (
-        <ReactLeafletMap center={{ lat: 40.7, lng: -73.85 }} zoom={11}>
+        <ReactLeafletMap
+          center={{ lat: 40.7, lng: -73.85 }}
+          zoom={11}
+          boxZoom={true}
+        >
           <TileLayer
             attribution=' &copy; <a href="https://carto.com/attributions">CARTO</a>'
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
@@ -45,7 +49,7 @@ const Map = () => {
 
               recipientActions.setMarker({
                 recordId: point.properties.recordId,
-                marker: marker
+                marker: marker,
               });
 
               return marker;
