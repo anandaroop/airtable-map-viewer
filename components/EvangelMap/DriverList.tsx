@@ -1,48 +1,24 @@
-import { useStoreState } from "./store";
-import { DriverList } from "./DriverList";
+import { decodeAirtableGeodata } from "../../lib/geojson";
 import { RecipientsModel, RecipientRecord } from "./store/recipients";
+import { DriversModel, DriverRecord } from "./store/drivers";
 
-export const Info = () => {
-  // const recipientItems = useStoreState((state) => state.recipients.items);
-  const recipientCounts = useStoreState((state) => state.recipients.counts);
-  const colorMap = useStoreState((state) => state.recipients.colorMap);
-  const markerMap = useStoreState((state) => state.recipients.markerMap);
-
-  const driverItems = useStoreState((state) => state.drivers.items);
-  const itineraryMap = useStoreState((state) => state.drivers.itineraryMap);
-
-  return (
-    <>
-      <div className="info">
-        <p>
-          Recipients: {recipientCounts.assigned} assigned /{" "}
-          {recipientCounts.unassigned} unassigned
-        </p>
-        <p>Drivers: {Object.keys(driverItems).length}</p>
-        <DriverList
-          driverItems={driverItems}
-          colorMap={colorMap}
-          itineraryMap={itineraryMap}
-          markerMap={markerMap}
-        />
-      </div>
-      <style jsx>{`
-        div.info {
-          width: calc(100% - 1em);
-          padding: 0 1em;
-          overflow: scroll;
-        }
-      `}</style>
-    </>
-  );
+const MARKER_SIZE = {
+  TINY: 4,
+  REGULAR: 8,
+  LARGE: 12,
+  HUGE: 16,
 };
 
-const DriverList: React.FC<{
+interface DriverListProps {
   driverItems: DriversModel["items"];
   colorMap: RecipientsModel["colorMap"];
   itineraryMap: DriversModel["itineraryMap"];
   markerMap: RecipientsModel["markerMap"];
-}> = ({ driverItems, colorMap, itineraryMap, markerMap }) => {
+}
+
+export const DriverList: React.FC<DriverListProps> = (props) => {
+  const { driverItems, colorMap, itineraryMap, markerMap } = props;
+
   const drivers = Object.values(driverItems);
 
   return (
@@ -77,12 +53,16 @@ const DriverList: React.FC<{
   );
 };
 
-const Driver: React.FC<{
+interface DriverProps {
   driver: DriverRecord;
   colorMap: RecipientsModel["colorMap"];
   itineraryMap: DriversModel["itineraryMap"];
   markerMap: RecipientsModel["markerMap"];
-}> = ({ driver, children, markerMap, itineraryMap, colorMap }) => {
+}
+
+const Driver: React.FC<DriverProps> = (props) => {
+  const { driver, children, markerMap, itineraryMap, colorMap } = props;
+
   const recipientIds = itineraryMap[driver.id]?.map((r) => r.id);
   const theseMarkers = Object.entries(markerMap).reduce(
     (acc, [recipientId, marker]) => {
@@ -105,15 +85,17 @@ const Driver: React.FC<{
       className="driver"
       key={driver.id}
       onMouseEnter={() => {
-        theseMarkers.map((m) => m.setRadius(16));
-        allOtherMarkers.map((m) => m.setRadius(4));
+        theseMarkers.map((m) => m.setRadius(MARKER_SIZE.LARGE));
+        allOtherMarkers.map((m) => m.setRadius(MARKER_SIZE.TINY));
       }}
       onMouseLeave={() => {
-        theseMarkers.map((m) => m.setRadius(8));
-        allOtherMarkers.map((m) => m.setRadius(8));
+        theseMarkers.map((m) => m.setRadius(MARKER_SIZE.REGULAR));
+        allOtherMarkers.map((m) => m.setRadius(MARKER_SIZE.REGULAR));
       }}
     >
-      <div className="driverName">{driver.fields.Name}</div>
+      <div className="driverName">
+        {driver.fields.Name} ({recipientIds?.length || 0})
+      </div>
       <ul>{children}</ul>
       <style jsx>{`
         .driver {
@@ -136,27 +118,31 @@ const Driver: React.FC<{
   );
 };
 
-const Recipient: React.FC<{
+interface RecipientProps {
   recipient: RecipientRecord;
   driver: DriverRecord;
   colorMap: RecipientsModel["colorMap"];
   markerMap: RecipientsModel["markerMap"];
-}> = ({ recipient, driver, colorMap, markerMap }) => {
+}
+
+const Recipient: React.FC<RecipientProps> = (props) => {
+  const { recipient, driver, colorMap, markerMap } = props;
+
   const geodata = decodeAirtableGeodata(recipient.fields["Geocode cache"]);
   const marker = markerMap[recipient.id];
   return (
     <li
       key={recipient.id}
       onMouseEnter={(e) => {
-        marker.setRadius(24);
+        marker.setRadius(MARKER_SIZE.HUGE);
       }}
       onMouseLeave={(e) => {
-        marker.setRadius(16);
+        marker.setRadius(MARKER_SIZE.LARGE);
       }}
     >
       <div className="recipientName" style={{ color: colorMap[driver.id] }}>
         {recipient.fields.NameLookup[0]}
-        {recipient.fields["Confirmed?"] ? " ✓ " : " ﹖ "}
+        {recipient.fields["Confirmed?"] ? " ✓" : ""}
       </div>
       <div>
         <div className="address">
