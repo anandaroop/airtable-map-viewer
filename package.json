@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^0.13.0",
     "@turf/clusters-dbscan": "^6.0.1",
     "@turf/clusters-kmeans": "^6.0.1",
     "airtable": "^0.8.1",
