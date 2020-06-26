@@ -1,6 +1,7 @@
+import auth0 from "../../lib/auth0";
 import { base } from "../../lib/airtable";
 
-export default async (req, res) => {
+const records = async (req, res) => {
   const { tableName, viewName, primaryFieldName } = req.query;
 
   let additionalFieldNames: string = req.query.additionalFieldNames;
@@ -20,3 +21,5 @@ export default async (req, res) => {
   res.statusCode = 200;
   res.json(records);
 };
+
+export default auth0.requireAuthentication(records);

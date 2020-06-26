@@ -25,8 +25,12 @@ export const API = {
       ["additionalFieldNames", additionalFieldNames.join("|")],
     ]);
     const response = await fetch(`/api/records?${params.toString()}`);
-    const json = await response.json();
 
-    return json;
+    if (response.ok) {
+      const json = await response.json();
+      return json;
+    } else if (response.status == 401) {
+      throw new Error("Sorry, doesn't look like you are logged in.");
+    }
   },
 };

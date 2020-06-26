@@ -36,12 +36,11 @@ export const Info = () => {
       </div>
       <style jsx>{`
         div.info {
-          width: calc(100% - 1em);
-          padding: 0 1em;
+          width: 100%;
           overflow: scroll;
+          padding: 0 1em;
         }
       `}</style>
     </>
   );
 };
-

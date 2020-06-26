@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
 
-import { useStoreActions, useStoreState } from "./store";
-import { Main } from "./Main";
+import { useStoreActions } from "./store";
+import { Container } from "./Container";
 import { Box } from "./Box";
 import { Info } from "./Info";
 import { API } from "../../lib/api";
@@ -75,14 +75,14 @@ export const EvangelMap = () => {
 
   return (
     <>
-      <Main direction="row">
+      <Container direction="row">
         <Box flex="3">
           <MapWithNoSSR />
         </Box>
         <Box flex="1">
           <Info />
         </Box>
-      </Main>
+      </Container>
 
       <style jsx global>
         {`

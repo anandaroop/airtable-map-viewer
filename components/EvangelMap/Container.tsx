@@ -1,15 +1,16 @@
-export const Main = ({ children, direction = "row" }) => {
+export const Container = ({ children, direction = "row" }) => {
   return (
     <>
-      <main>{children}</main>
+      <div>{children}</div>
 
       <style jsx>
         {`
-          main {
+          div {
             display: flex;
             flex-direction: ${direction};
             width: 100%;
-            height: 100vh;
+            height: calc(100vh - 2rem);
+            overflow: hidden;
           }
         `}
       </style>

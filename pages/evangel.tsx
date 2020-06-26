@@ -1,6 +1,9 @@
 import Head from "next/head";
 import { StoreProvider } from "easy-peasy";
 
+import { Authenticated } from "../components/Authenticated";
+import { Layout } from "../components/Layout";
+
 import { EvangelMap } from "../components/EvangelMap";
 import { store } from "../components/EvangelMap/store";
 
@@ -9,12 +12,15 @@ export default function Evangel() {
     <>
       <Head>
         <title>QDSAMA: Evangel</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <StoreProvider store={store}>
-        <EvangelMap />
-      </StoreProvider>
+      <Authenticated redirectTo="/evangel">
+        <Layout>
+          <StoreProvider store={store}>
+            <EvangelMap />
+          </StoreProvider>
+        </Layout>
+      </Authenticated>
     </>
   );
 }
