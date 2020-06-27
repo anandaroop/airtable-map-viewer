@@ -45,7 +45,9 @@ const Map = () => {
                 color: "white",
                 fillColor,
                 fillOpacity: 0.5,
-              }).bindPopup(airtableHyperlinkFor(point));
+              })
+                .bindPopup(airtableHyperlinkFor(point))
+                .on("mouseover", () => marker.openPopup());
 
               recipientActions.setMarker({
                 recordId: point.properties.recordId,
