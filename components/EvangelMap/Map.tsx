@@ -59,7 +59,8 @@ const Map = () => {
           <GeoJSON
             data={drivers.geojson}
             pointToLayer={(point: Feature<Point>, latLng) => {
-              const color = recipients.colorMap[point.properties.recordId] || "gray"
+              const color =
+                recipients.colorMap[point.properties.recordId] || "gray";
 
               return new CircleMarker(latLng, {
                 color,
@@ -95,9 +96,9 @@ const airtableHyperlinkFor = (point: Feature<Point>) => {
   const primaryFieldValue = point.id as string;
 
   const recordUrl = `https://airtable.com/${tblId}/${viwId}/${recId}`;
-  const abbreviatedLinkText = primaryFieldValue.substr(0, 5);
+  const linkText = primaryFieldValue;
 
-  return `<a href="${recordUrl}" target="airtable">${abbreviatedLinkText}…</a>`;
+  return `<a href="${recordUrl}" target="airtable">${linkText}…</a>`;
 };
 
 export default Map; // default bc of dynamic import
