@@ -1,4 +1,3 @@
-import auth0 from "../../lib/auth0";
 import { base } from "../../lib/airtable";
 
 const records = async (req, res) => {
@@ -22,4 +21,4 @@ const records = async (req, res) => {
   res.json(records);
 };
 
-export default auth0.requireAuthentication(records);
+export default records
