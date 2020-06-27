@@ -1,4 +1,5 @@
 import { RecipientsModel, RecipientRecord } from "./store/recipients";
+import { MARKER_SIZE } from "./DriverList";
 
 interface UnassignedRecipientsProps {
   recipients: RecipientRecord[];
@@ -24,13 +25,13 @@ export const UnassignedRecipients: React.FC<UnassignedRecipientsProps> = (props)
             <div
               key={recipient.id}
               className="recipient"
-              onMouseEnter={(e) => {
-                marker.setRadius(12);
+              onMouseEnter={() => {
+                marker.setRadius(MARKER_SIZE.LARGE);
                 marker.setStyle({ color: "red", fillColor: "none", weight: 4 });
                 marker.bringToFront();
               }}
-              onMouseLeave={(e) => {
-                marker.setRadius(8);
+              onMouseLeave={() => {
+                marker.setRadius(MARKER_SIZE.REGULAR);
                 marker.setStyle({ color: "none", fillColor: "gray" });
                 marker.bringToBack();
               }}

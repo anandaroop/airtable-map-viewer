@@ -2,7 +2,7 @@ import { decodeAirtableGeodata } from "../../lib/geojson";
 import { RecipientsModel, RecipientRecord } from "./store/recipients";
 import { DriversModel, DriverRecord } from "./store/drivers";
 
-const MARKER_SIZE = {
+export const MARKER_SIZE = {
   TINY: 4,
   REGULAR: 8,
   LARGE: 12,
