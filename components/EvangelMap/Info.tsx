@@ -18,11 +18,13 @@ export const Info = () => {
   return (
     <>
       <div className="info">
-        <p>
-          Recipients: {recipientCounts.assigned} assigned /{" "}
-          {recipientCounts.unassigned} unassigned
-        </p>
-        <p>Drivers: {Object.keys(driverItems).length}</p>
+        <div className="summary">
+          <span>
+            Stops: {recipientCounts.assigned} assigned /{" "}
+            {recipientCounts.unassigned} unassigned
+          </span>
+          <span>Drivers: {Object.keys(driverItems).length}</span>
+        </div>
         <DriverList
           driverItems={driverItems}
           colorMap={colorMap}
@@ -35,10 +37,15 @@ export const Info = () => {
         />
       </div>
       <style jsx>{`
-        div.info {
+        .info {
           width: 100%;
           overflow: scroll;
-          padding: 0 1em;
+          padding: 1em;
+        }
+
+        .summary {
+          display: flex;
+          justify-content: space-between;
         }
       `}</style>
     </>
