@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-import { getUser, UserProfile } from "../lib/auth0";
+import { getUser, UserProfile } from "../../lib/auth0";
 
+/**
+ * When there is a valid Auth0 session, `UserContext` will contain
+ * the currently logged in user's profile. It can be accessed via
+ * `UserContext.Consumer` or `useContext(UserContext)`.
+ */
 export const UserContext: React.Context<UserProfile> = React.createContext(
   null
 );
@@ -12,10 +17,18 @@ interface AuthenticatedProps {
    * Should correspond to the URL where the component
    * being wrapped by <Authenticated> is going to be accessible.
    */
-  redirectTo: string;
+  onSuccessRedirectTo: string;
 }
+
+/**
+ * Wrap a component with this in order to require a current Auth0 session.
+ *
+ * Upon finding an active session (via /api/me) the UserContext object will
+ * contain the active user profile, and will be made available to any component
+ * down the tree via `UserContext.Consumer` or `useContext(UserContext)`.
+ */
 export const Authenticated: React.FC<AuthenticatedProps> = ({
-  redirectTo,
+  onSuccessRedirectTo: redirectTo,
   children,
 }) => {
   const [user, setUser] = useState(null);

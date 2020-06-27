@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 
 import { useStoreActions } from "./store";
 import { Container } from "./Container";
-import { Box } from "./Box";
+import { Box } from "../common";
 import { Info } from "./Info";
 import { API } from "../../lib/api";
 

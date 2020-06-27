@@ -2,7 +2,16 @@ import { useContext } from "react";
 
 import { UserContext } from "./Authenticated";
 
-export const Layout: React.FC = ({ children }) => {
+/**
+ * Wrap a component with this in order to provide a standard fixed
+ * header and content area suitable for a SPA type of layout.
+ *
+ * `<header>` will include the current username and a logout link.
+ *
+ * `<main>` will include the children passed into the component.
+ *
+ */
+export const LayoutWithUserHeader: React.FC = ({ children }) => {
   const user = useContext(UserContext);
   return (
     <>

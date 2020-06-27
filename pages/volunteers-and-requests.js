@@ -1,8 +1,7 @@
 import Head from 'next/head'
 import { StoreProvider } from 'easy-peasy';
 
-import { Authenticated } from "../components/Authenticated";
-import { Layout } from "../components/Layout";
+import { Authenticated, LayoutWithUserHeader } from "../components/common";
 
 import { MapViewer } from "../components/MapViewer";
 import { store } from "../store";
@@ -15,12 +14,12 @@ export default function VolunteersAndRequests() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Authenticated redirectTo="/evangel">
-        <Layout>
+      <Authenticated onSuccessRedirectTo="/volunteers-and-requests">
+        <LayoutWithUserHeader>
           <StoreProvider store={store}>
             <MapViewer />
           </StoreProvider>
-        </Layout>
+        </LayoutWithUserHeader>
       </Authenticated>
     </>
   )
