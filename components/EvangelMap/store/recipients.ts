@@ -12,13 +12,17 @@ import {
   ThunkOn,
 } from "easy-peasy";
 import { FeatureCollection, Feature, Point } from "geojson";
+import { CircleMarker } from "leaflet";
+import { point, distance } from "@turf/turf";
 
-import { toGeoJSONFeatureCollection } from "../../../lib/geojson";
+import {
+  toGeoJSONFeatureCollection,
+  decodeAirtableGeodata,
+} from "../../../lib/geojson";
 import { MetaFields } from "../../../lib/airtable";
 import { StoreModel } from "./index";
 import { DriversModel } from "./drivers";
 import { driverPalette } from "../../../lib/palette";
-import { CircleMarker } from "leaflet";
 
 export interface RecipientFields {
   /** Name lookup for the linked Request table record */
@@ -65,6 +69,17 @@ export interface RecipientsModel {
       assigned: number;
       unassigned: number;
     }
+  >;
+
+  /** Warnings for shaky looking data */
+  warnings: Computed<
+    RecipientsModel,
+    {
+      missingLatLngs: string[];
+      genericLatLngs: string[];
+      unavailableDrivers: string[];
+    },
+    StoreModel
   >;
 
   /** Meta info from Airtable's Meta table */
@@ -126,6 +141,59 @@ export const recipientsModel: RecipientsModel = {
     return { assigned, unassigned };
   }),
 
+  warnings: computed(
+    [
+      // we only care about changes to recipients.items...
+      (state) => state.items,
+      // ...and drivers.items
+      (_state, storeState) => storeState.drivers.items,
+    ],
+    (recipientItems, driverItems) => {
+      const recipients = Object.values(recipientItems);
+      const driverIds = Object.values(driverItems).map((d) => d.id);
+
+      let missingLatLngs = [],
+        genericLatLngs = [],
+        unavailableDrivers = [];
+
+      const GENERIC_LAT_LNG: Feature<Point> = point([-73.79485, 40.72822]);
+
+      recipients.forEach((r) => {
+        const geodata = decodeAirtableGeodata(r.fields["Geocode cache"]);
+        const {
+          o: { lat, lng },
+        } = geodata;
+
+        // missing lat lng
+        if (!lat || !lng) {
+          missingLatLngs.push(r.id);
+        }
+
+        // generic lat lng
+        const distanceToGenericPoint = distance(
+          point([lng, lat]),
+          GENERIC_LAT_LNG,
+          { units: "meters" }
+        );
+        if (distanceToGenericPoint < 10) {
+          genericLatLngs.push(r.id);
+        }
+
+        // unavailable driver
+        const assignedDriverId = r.fields.Driver?.[0];
+        if (assignedDriverId && !driverIds.includes(assignedDriverId)) {
+          unavailableDrivers.push(r.id);
+        }
+      });
+
+      return {
+        missingLatLngs,
+        genericLatLngs,
+        unavailableDrivers,
+      };
+    }
+  ),
+
   metadata: null,
 
   geojson: computed((state) => {
@@ -163,9 +231,11 @@ export const recipientsModel: RecipientsModel = {
 
   setAll: action((state, payload) => {
     const { data } = payload;
+    const items = {};
     data.forEach((record) => {
-      state.items[record.id] = record;
+      items[record.id] = record;
     });
+    state.items = items;
   }),
 
   setMetadata: action((state, payload) => {

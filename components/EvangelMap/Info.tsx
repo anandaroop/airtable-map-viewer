@@ -1,6 +1,7 @@
 import { useStoreState } from "./store";
 import { DriverList } from "./DriverList";
 import { UnassignedRecipients } from "./UnassignedRecipients";
+import { Warnings } from "./Warnings";
 
 export const Info = () => {
   const recipientItems = useStoreState((state) => state.recipients.items);
@@ -31,6 +32,7 @@ export const Info = () => {
           itineraryMap={itineraryMap}
           markerMap={markerMap}
         />
+        <Warnings />
         <UnassignedRecipients
           recipients={unassignedRecipients}
           markerMap={markerMap}

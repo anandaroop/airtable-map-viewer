@@ -100,7 +100,7 @@ const airtableHyperlinkFor = (point: Feature<Point>) => {
   const recordUrl = `https://airtable.com/${tblId}/${viwId}/${recId}`;
   const linkText = primaryFieldValue;
 
-  return `<a href="${recordUrl}" target="airtable">${linkText}…</a>`;
+  return `<a href="${recordUrl}" target="airtable">${linkText}</a>`;
 };
 
 export default Map; // default bc of dynamic import
