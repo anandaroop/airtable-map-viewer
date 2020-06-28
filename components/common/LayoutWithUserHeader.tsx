@@ -1,6 +1,7 @@
 import { useContext } from "react";
 
 import { UserContext } from "./Authenticated";
+import Head from "next/head";
 
 /**
  * Wrap a component with this in order to provide a standard fixed
@@ -15,6 +16,12 @@ export const LayoutWithUserHeader: React.FC = ({ children }) => {
   const user = useContext(UserContext);
   return (
     <>
+      <Head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
       <div className="container">
         <header>
           <a href="https://www.queensdsamutualaid.org/">
@@ -38,6 +45,11 @@ export const LayoutWithUserHeader: React.FC = ({ children }) => {
             padding: 0;
             box-sizing: border-box;
           }
+
+          body {
+            font-family: "Fira Sans", sans-serif;
+            font-variation-settings: "wght" 600;
+          }
         `}
       </style>
 
@@ -53,9 +65,7 @@ export const LayoutWithUserHeader: React.FC = ({ children }) => {
           display: flex;
           justify-content: space-between;
           align-items: center;
-
           padding: 0 1em;
-
           flex: 1 0 3rem;
         }
 
