@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import dynamic from "next/dynamic";
 
 import { useStoreActions } from "./store";
+import { Help } from "./Help";
 import { Container } from "./Container";
 import { Box } from "../common";
 import { Info } from "./Info";
@@ -82,6 +83,7 @@ export const EvangelMap = () => {
         <Box flex="1">
           <Info />
         </Box>
+        <Help />
       </Container>
 
       <style jsx global>
@@ -106,10 +108,6 @@ export const EvangelMap = () => {
           }
 
           ul {
-          }
-
-          body {
-            font-family: sans-serif;
           }
         `}
       </style>
