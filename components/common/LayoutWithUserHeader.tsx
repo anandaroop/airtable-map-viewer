@@ -94,7 +94,8 @@ export const LayoutWithUserHeader: React.FC = ({ children }) => {
         }
 
         main {
-          flex: 1 0 calc(100vh - 4rem);
+          flex: 1 0 calc(100vh - 3rem);
+          overflow:hidden;
         }
       `}</style>
     </>
