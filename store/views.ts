@@ -11,8 +11,7 @@ import {
   ThunkOn,
 } from "easy-peasy";
 import { FeatureCollection } from "geojson";
-import clustersKmeans from "@turf/clusters-kmeans";
-import clustersDbscan from "@turf/clusters-dbscan";
+import { clustersDbscan, clustersKmeans } from "@turf/turf";
 
 import { MetaFields } from "../lib/airtable";
 import { toGeoJSONFeatureCollection } from "../lib/geojson";
@@ -157,10 +156,11 @@ export const viewsModel: ViewsModel = {
     );
 
     // for some views, let's ad-hoc cluster them
-    if (viewId === "viwJGcKgSrTDNX6DP") { // Delivery Recipients: Map
+    if (viewId === "viwJGcKgSrTDNX6DP") {
+      // Delivery Recipients: Map
       const options = { numberOfClusters: 7 };
-      // const clusteredFeatures = clustersKmeans(featureCollection, options);
-      const clusteredFeatures = clustersDbscan(featureCollection, 2, options);
+      const clusteredFeatures = clustersKmeans(featureCollection, options);
+      // const clusteredFeatures = clustersDbscan(featureCollection, 2, options);
 
       featureCollection = clusteredFeatures;
     }

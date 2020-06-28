@@ -9,8 +9,7 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^0.13.0",
-    "@turf/clusters-dbscan": "^6.0.1",
-    "@turf/clusters-kmeans": "^6.0.1",
+    "@turf/turf": "^5.1.6",
     "airtable": "^0.8.1",
     "chroma-js": "^2.1.0",
     "easy-peasy": "^3.3.0",
