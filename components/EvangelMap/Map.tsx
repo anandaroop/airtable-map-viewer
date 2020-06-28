@@ -64,13 +64,17 @@ const Map = () => {
               const color =
                 recipients.colorMap[point.properties.recordId] || "gray";
 
-              return new CircleMarker(latLng, {
+              const marker = new CircleMarker(latLng, {
                 color,
                 radius: 8,
                 weight: 4,
                 opacity: 0.75,
                 fillColor: "transparent",
-              }).bindPopup(airtableHyperlinkFor(point));
+              })
+                .bindPopup(airtableHyperlinkFor(point))
+                .on("mouseover", () => marker.openPopup());
+
+              return marker;
             }}
           />
         </ReactLeafletMap>

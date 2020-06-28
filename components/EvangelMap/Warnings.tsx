@@ -22,7 +22,7 @@ export const Warnings = () => {
             ⚠️ Missing geocodes
             {warnings.missingLatLngs.map((rid) => {
               return (
-                <li>
+                <li key={rid}>
                   <AirtableHyperlink tid={tid} vid={vid} rid={rid}>
                     {recipients[rid].fields[primaryFieldName]}
                   </AirtableHyperlink>
@@ -37,7 +37,7 @@ export const Warnings = () => {
             ⚠️ Improper geocodes
             {warnings.genericLatLngs.map((rid) => {
               return (
-                <li>
+                <li key={rid}>
                   <AirtableHyperlink tid={tid} vid={vid} rid={rid}>
                     {recipients[rid].fields[primaryFieldName]}
                   </AirtableHyperlink>
@@ -52,7 +52,7 @@ export const Warnings = () => {
             ⚠️ Incorrect drivers
             {warnings.unavailableDrivers.map((rid) => {
               return (
-                <li>
+                <li key={rid}>
                   <AirtableHyperlink tid={tid} vid={vid} rid={rid}>
                     {recipients[rid].fields[primaryFieldName]}
                   </AirtableHyperlink>
@@ -66,7 +66,7 @@ export const Warnings = () => {
       <style jsx>{`
         .warnings {
           margin-top: 1em;
-          font-style: italic;
+          // font-style: italic;
         }
         ul {
         }
