@@ -76,7 +76,8 @@ export const Help = () => {
           left: 1em;
           bottom: 1em;
           z-index: 1000;
-          background: #ffffff99;
+          background: #ffffffdd;
+          box-shadow: 0 0 8px #00000033;
           border-radius: 0.5em;
           line-height: 1.4;
         }
