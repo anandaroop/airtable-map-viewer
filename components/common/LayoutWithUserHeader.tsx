@@ -56,15 +56,15 @@ export const LayoutWithUserHeader: React.FC = ({ children }) => {
 
           padding: 0 1em;
 
-          flex: 1 0 2rem;
+          flex: 1 0 3rem;
         }
 
         header .logo {
           width: 8rem;
-          height: 2rem;
-          background-image: url("https://static.wixstatic.com/media/8932f3_63ea4ef1df484e98a7b73a3fc6f02915~mv2.png/v1/fill/w_453,h_235,al_c,q_85,usm_0.66_1.00_0.01/queens-dsa.webp");
+          height: 3rem;
+          background-image: url(/queens-dsa.png);
           background-position: left;
-          background-size: auto 3rem;
+          background-size: auto 4rem;
           background-repeat: no-repeat;
           background-color: #e7212f;
         }
@@ -84,7 +84,7 @@ export const LayoutWithUserHeader: React.FC = ({ children }) => {
         }
 
         main {
-          flex: 1 0 calc(100vh - 2rem);
+          flex: 1 0 calc(100vh - 3rem);
         }
       `}</style>
     </>
