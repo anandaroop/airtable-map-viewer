@@ -1,6 +1,7 @@
 import { decodeAirtableGeodata } from "../../lib/geojson";
 import { RecipientsModel, RecipientRecord } from "./store/recipients";
 import { DriversModel, DriverRecord } from "./store/drivers";
+import { useStoreState } from "./store";
 
 export const MARKER_SIZE = {
   TINY: 4,
@@ -19,34 +20,51 @@ interface DriverListProps {
 export const DriverList: React.FC<DriverListProps> = (props) => {
   const { driverItems, colorMap, itineraryMap, markerMap } = props;
 
+  const isMinimized = useStoreState((state) => state.app.isDriverListMinimized);
+
   const drivers = Object.values(driverItems);
 
   return (
     <div className="driver-list">
       {drivers.map((driver) => {
         const recipientItinerary = itineraryMap[driver.id];
+        const color = colorMap[driver.id];
+
         return (
           <Driver
             key={driver.id}
             driver={driver}
-            colorMap={colorMap}
+            color={color}
             markerMap={markerMap}
             itineraryMap={itineraryMap}
           >
-            {recipientItinerary?.map((recipient) => (
-              <Recipient
-                key={recipient.id}
-                recipient={recipient}
-                driver={driver}
-                colorMap={colorMap}
-                markerMap={markerMap}
-              />
-            ))}
+            {isMinimized && (
+              <div style={{ padding: "0.5em 0" }}>
+                {recipientItinerary?.map((_, i) => (
+                  <div key={i} className="tick" style={{ background: color }}>
+                    {" "}
+                  </div>
+                ))}
+              </div>
+            )}
+            {!isMinimized &&
+              recipientItinerary?.map((recipient) => (
+                <Recipient
+                  key={recipient.id}
+                  recipient={recipient}
+                  color={color}
+                  markerMap={markerMap}
+                />
+              ))}
           </Driver>
         );
       })}
       <style jsx>{`
-        .driver-list {
+        .tick {
+          display: inline-block;
+          border: solid 1px white;
+          height: 1em;
+          width: 1em;
         }
       `}</style>
     </div>
@@ -55,13 +73,13 @@ export const DriverList: React.FC<DriverListProps> = (props) => {
 
 interface DriverProps {
   driver: DriverRecord;
-  colorMap: RecipientsModel["colorMap"];
+  color: string;
   itineraryMap: DriversModel["itineraryMap"];
   markerMap: RecipientsModel["markerMap"];
 }
 
 const Driver: React.FC<DriverProps> = (props) => {
-  const { driver, children, markerMap, itineraryMap, colorMap } = props;
+  const { driver, children, markerMap, itineraryMap, color } = props;
 
   const recipientIds = itineraryMap[driver.id]?.map((r) => r.id);
   const theseMarkers = Object.entries(markerMap).reduce(
@@ -78,7 +96,6 @@ const Driver: React.FC<DriverProps> = (props) => {
     },
     []
   );
-  const color = colorMap[driver.id];
 
   return (
     <div
@@ -120,13 +137,12 @@ const Driver: React.FC<DriverProps> = (props) => {
 
 interface RecipientProps {
   recipient: RecipientRecord;
-  driver: DriverRecord;
-  colorMap: RecipientsModel["colorMap"];
+  color: string;
   markerMap: RecipientsModel["markerMap"];
 }
 
 const Recipient: React.FC<RecipientProps> = (props) => {
-  const { recipient, driver, colorMap, markerMap } = props;
+  const { recipient, color, markerMap } = props;
 
   const geodata = decodeAirtableGeodata(recipient.fields["Geocode cache"]);
   const marker = markerMap[recipient.id];
@@ -140,7 +156,7 @@ const Recipient: React.FC<RecipientProps> = (props) => {
         marker.setRadius(MARKER_SIZE.LARGE);
       }}
     >
-      <div className="recipientName" style={{ color: colorMap[driver.id] }}>
+      <div className="recipientName" style={{ color }}>
         {recipient.fields.NameLookup[0]}
         {recipient.fields["Confirmed?"] ? " ✓" : ""}
       </div>

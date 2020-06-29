@@ -2,10 +2,10 @@ import { useStoreState } from "./store";
 import { DriverList } from "./DriverList";
 import { UnassignedRecipients } from "./UnassignedRecipients";
 import { Warnings } from "./Warnings";
+import { Summary } from "./Summary";
 
 export const Info = () => {
   const recipientItems = useStoreState((state) => state.recipients.items);
-  const recipientCounts = useStoreState((state) => state.recipients.counts);
   const colorMap = useStoreState((state) => state.recipients.colorMap);
   const markerMap = useStoreState((state) => state.recipients.markerMap);
 
@@ -19,13 +19,7 @@ export const Info = () => {
   return (
     <>
       <div className="info">
-        <div className="summary">
-          <span>
-            Stops: {recipientCounts.assigned} assigned /{" "}
-            {recipientCounts.unassigned} unassigned
-          </span>
-          <span>Drivers: {Object.keys(driverItems).length}</span>
-        </div>
+        <Summary />
         <DriverList
           driverItems={driverItems}
           colorMap={colorMap}
@@ -45,10 +39,6 @@ export const Info = () => {
           padding: 1em;
         }
 
-        .summary {
-          display: flex;
-          justify-content: space-between;
-        }
       `}</style>
     </>
   );
