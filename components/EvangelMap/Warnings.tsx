@@ -1,4 +1,5 @@
 import { useStoreState } from "./store";
+import { AirtableHyperlink } from "./AirtableHyperlink";
 
 export const Warnings = () => {
   const warnings = useStoreState((state) => state.recipients.warnings);
@@ -78,25 +79,3 @@ export const Warnings = () => {
     </>
   );
 };
-
-interface AirtableHyperlinkProps {
-  /** Table ID */
-  tid: string;
-
-  /** View ID */
-  vid: string;
-
-  /** Record ID */
-  rid: string;
-}
-
-const AirtableHyperlink: React.FC<AirtableHyperlinkProps> = ({
-  tid,
-  vid,
-  rid,
-  children,
-}) => (
-  <a href={`https://airtable.com/${tid}/${vid}/${rid}`} target="airtable">
-    {children}
-  </a>
-);
