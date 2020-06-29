@@ -23,7 +23,6 @@ export const EvangelMap = () => {
   const setDriverMetadata = useStoreActions(
     (actions) => actions.drivers.setMetadata
   );
-  const touch = useStoreActions((actions) => actions.app.touch);
 
   useEffect(() => {
     async function initialize() {
@@ -67,8 +66,6 @@ export const EvangelMap = () => {
         ],
       });
       setAllRecipientItems({ data: recipientRecords });
-
-      touch();
     }
 
     initialize();

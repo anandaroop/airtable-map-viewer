@@ -3,20 +3,19 @@ import { action, Action } from "easy-peasy";
 export interface AppModel {
   // STATE
 
-  lastPolledAt: Date;
-
   isHelpVisible: boolean;
+
+  isDriverListMinimized: boolean;
 
   // ACTIONS
 
-  /** Update the lastPolledAt timestamp */
-  touch: Action<AppModel>;
-
-  /** Show the help modal */
   showHelp: Action<AppModel>;
 
-  /** Hide the help modal */
   hideHelp: Action<AppModel>;
+
+  maximizeDriverList: Action<AppModel>;
+
+  minimizeDriverList: Action<AppModel>;
 
   // LISTENERS
 }
@@ -24,22 +23,26 @@ export interface AppModel {
 export const appModel: AppModel = {
   // STATE
 
-  lastPolledAt: null,
-
   isHelpVisible: false,
+
+  isDriverListMinimized: false,
 
   // ACTIONS
 
-  touch: action((state) => {
-    state.lastPolledAt = new Date();
-  }),
-
   hideHelp: action((state) => {
-    state.isHelpVisible = false
+    state.isHelpVisible = false;
   }),
 
   showHelp: action((state) => {
-    state.isHelpVisible = true
+    state.isHelpVisible = true;
+  }),
+
+  maximizeDriverList: action((state) => {
+    state.isDriverListMinimized = false;
+  }),
+
+  minimizeDriverList: action((state) => {
+    state.isDriverListMinimized = true;
   }),
 
   // LISTENERS
