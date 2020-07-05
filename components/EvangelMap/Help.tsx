@@ -50,9 +50,31 @@ export const Help = () => {
               </ol>
 
               <p>
-                Open rings represent drivers. Filled discs represent stops.
-                Stops will be gray until they are assigned; then they will be
-                color-coded to match their driver.
+                <svg height="20" width="20" style={{ verticalAlign: "middle" }}>
+                  <circle
+                    cx="10"
+                    cy="10"
+                    r="8"
+                    stroke="red"
+                    stroke-width="4"
+                    fill="none"
+                  />
+                </svg>{" "}
+                Open rings represent drivers.
+                <br />
+                <br />
+                <svg height="20" width="20" style={{ verticalAlign: "middle" }}>
+                  <circle
+                    cx="10"
+                    cy="10"
+                    r="8"
+                    stroke="red"
+                    stroke-width="0"
+                    fill="red"
+                  />
+                </svg>{" "}
+                Filled discs represent stops. Stops will be gray until they are
+                assigned; then they will be color-coded to match their driver.
               </p>
               <p>
                 For further questions, drop a note in the the{" "}
@@ -60,6 +82,36 @@ export const Help = () => {
                   #mutualaid-data
                 </a>{" "}
                 channel
+              </p>
+
+              <p>
+                <svg width="100" height="100">
+                  <g>
+                    <path
+                      stroke="#ff0000"
+                      stroke-opacity="0.75"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      fill="transparent"
+                      fill-opacity="0.2"
+                      fill-rule="evenodd"
+                      d="M833,1335a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 "
+                    ></path>
+                    <path
+                      className="leaflet-interactive"
+                      stroke="white"
+                      stroke-opacity="1"
+                      stroke-width="1"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      fill="gray"
+                      fill-opacity="0.5"
+                      fill-rule="evenodd"
+                      d="M842,1364a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 "
+                    ></path>
+                  </g>
+                </svg>
               </p>
             </div>
           </div>
