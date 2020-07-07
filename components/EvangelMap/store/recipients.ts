@@ -167,16 +167,16 @@ export const recipientsModel: RecipientsModel = {
         // missing lat lng
         if (!lat || !lng) {
           missingLatLngs.push(r.id);
-        }
-
-        // generic lat lng
-        const distanceToGenericPoint = distance(
-          point([lng, lat]),
-          GENERIC_LAT_LNG,
-          { units: "meters" }
-        );
-        if (distanceToGenericPoint < 10) {
-          genericLatLngs.push(r.id);
+        } else {
+          // generic lat lng
+          const distanceToGenericPoint = distance(
+            point([lng, lat]),
+            GENERIC_LAT_LNG,
+            { units: "meters" }
+          );
+          if (distanceToGenericPoint < 10) {
+            genericLatLngs.push(r.id);
+          }
         }
 
         // unavailable driver

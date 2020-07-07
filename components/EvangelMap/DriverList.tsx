@@ -157,7 +157,7 @@ const Recipient: React.FC<RecipientProps> = (props) => {
       }}
     >
       <div className="recipientName" style={{ color }}>
-        {recipient.fields.NameLookup[0]}
+        {recipient.fields.NameLookup?.[0]}
         {recipient.fields["Confirmed?"] ? " ✓" : ""}
       </div>
       <div>

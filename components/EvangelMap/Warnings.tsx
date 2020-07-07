@@ -35,7 +35,7 @@ export const Warnings = () => {
 
         {warnings.genericLatLngs?.length > 0 && (
           <ul>
-            ⚠️ Improper geocodes
+            ⚠️ Invalid addresses
             {warnings.genericLatLngs.map((rid) => {
               return (
                 <li key={rid}>
