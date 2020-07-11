@@ -100,11 +100,8 @@ export const EvangelMap = () => {
             padding-bottom: 0.5em;
           }
 
-          li {
-            margin-left: 1em;
-          }
-
-          ul {
+          ol, ul {
+            padding-left: 1.5em;
           }
         `}
       </style>
