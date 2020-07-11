@@ -3,5 +3,6 @@
   - [?] separate field for Driver Notes?
   - [-] make easier to switch to tmp dev base
   - [-] more robust for missing recipients, latlngs
+  - [x] copy as markdown for slack
   - [ ] highlight generic point!
-  - [ ] copy as markdown for slack
+  - [ ] secure random

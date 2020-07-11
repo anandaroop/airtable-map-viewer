@@ -2,6 +2,8 @@ import { decodeAirtableGeodata } from "../../lib/geojson";
 import { RecipientsModel, RecipientRecord } from "./store/recipients";
 import { DriversModel, DriverRecord } from "./store/drivers";
 import { useStoreState } from "./store";
+import Clipboard from "clipboard";
+import { useEffect } from "react";
 
 export const MARKER_SIZE = {
   TINY: 4,
@@ -23,6 +25,19 @@ export const DriverList: React.FC<DriverListProps> = (props) => {
   const isMinimized = useStoreState((state) => state.app.isDriverListMinimized);
 
   const drivers = Object.values(driverItems);
+
+  useEffect(() => {
+    const clipboard = new Clipboard("button.copy", {
+      target: function (trigger) {
+        const driverDiv = trigger.parentElement.nextSibling as Element;
+        return driverDiv;
+      },
+    });
+
+    return () => {
+      clipboard.destroy();
+    };
+  }, []);
 
   return (
     <div className="driver-list">
@@ -98,32 +113,70 @@ const Driver: React.FC<DriverProps> = (props) => {
   );
 
   return (
-    <div
-      className="driver"
-      key={driver.id}
-      onMouseEnter={() => {
-        theseMarkers.map((m) => m.setRadius(MARKER_SIZE.LARGE));
-        allOtherMarkers.map((m) => m.setRadius(MARKER_SIZE.TINY));
-      }}
-      onMouseLeave={() => {
-        theseMarkers.map((m) => m.setRadius(MARKER_SIZE.REGULAR));
-        allOtherMarkers.map((m) => m.setRadius(MARKER_SIZE.REGULAR));
-      }}
-    >
-      <div className="driverName">
-        {driver.fields.Name} ({recipientIds?.length || 0})
+    <div className="copy-button-and-driver">
+      <div className="copy-button">
+        <button className="copy">copy</button>
       </div>
-      <div className="recipientList">{children}</div>
+
+      <div
+        className="driver"
+        key={driver.id}
+        onMouseEnter={() => {
+          theseMarkers.map((m) => m.setRadius(MARKER_SIZE.LARGE));
+          allOtherMarkers.map((m) => m.setRadius(MARKER_SIZE.TINY));
+        }}
+        onMouseLeave={() => {
+          theseMarkers.map((m) => m.setRadius(MARKER_SIZE.REGULAR));
+          allOtherMarkers.map((m) => m.setRadius(MARKER_SIZE.REGULAR));
+        }}
+      >
+        <div className="driverName">
+          <span>
+            {driver.fields.Name} ({recipientIds?.length || 0})
+          </span>
+        </div>
+        <div className="recipientList">{children}</div>
+      </div>
       <style jsx>{`
+        .copy-button-and-driver {
+          position: relative;
+        }
+
+        .copy-button {
+          position: absolute;
+          right: 0.2em;
+          top: 1.2em;
+        }
+
+        .copy-button button {
+          border: solid 1px #ffffffff;
+          background: #ffffff33;
+          color: white;
+          border-radius: 0.25em;
+          padding: 0 0.25em;
+          height: 1.6em;
+          margin-left: 0.25em;
+          opacity: 0.75;
+          cursor: pointer;
+        }
+
+        .copy-button button:hover {
+          opacity: 1;
+        }
+
         .driver {
           padding-top: 1em;
         }
+
         .driverName {
           font-weight: 700;
           font-size: 1em;
+          line-height: 1.8em;
           background: ${color}cc;
           color: white;
-          padding: 0.25em 0.5em;
+          padding: 0 0.5em;
+          display: flex;
+          justify-content: space-between;
         }
 
         .recipientList {
