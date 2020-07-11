@@ -56,7 +56,7 @@ export const Help = () => {
                     cy="10"
                     r="8"
                     stroke="red"
-                    stroke-width="4"
+                    strokeWidth="4"
                     fill="none"
                   />
                 </svg>{" "}
@@ -69,7 +69,7 @@ export const Help = () => {
                     cy="10"
                     r="8"
                     stroke="red"
-                    stroke-width="0"
+                    strokeWidth="0"
                     fill="red"
                   />
                 </svg>{" "}
@@ -77,41 +77,15 @@ export const Help = () => {
                 assigned; then they will be color-coded to match their driver.
               </p>
               <p>
+                Once all assignments are done, use the "Copy" button to copy a
+                driver itinerary for pasting into Slack.
+              </p>
+              <p>
                 For further questions, drop a note in the the{" "}
                 <a href="https://queensdsa.slack.com/archives/C012THPS340">
                   #mutualaid-data
                 </a>{" "}
                 channel
-              </p>
-
-              <p>
-                <svg width="100" height="100">
-                  <g>
-                    <path
-                      stroke="#ff0000"
-                      stroke-opacity="0.75"
-                      stroke-width="4"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      fill="transparent"
-                      fill-opacity="0.2"
-                      fill-rule="evenodd"
-                      d="M833,1335a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 "
-                    ></path>
-                    <path
-                      className="leaflet-interactive"
-                      stroke="white"
-                      stroke-opacity="1"
-                      stroke-width="1"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      fill="gray"
-                      fill-opacity="0.5"
-                      fill-rule="evenodd"
-                      d="M842,1364a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 "
-                    ></path>
-                  </g>
-                </svg>
               </p>
             </div>
           </div>
