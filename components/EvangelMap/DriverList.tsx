@@ -113,20 +113,20 @@ const Driver: React.FC<DriverProps> = (props) => {
       <div className="driverName">
         {driver.fields.Name} ({recipientIds?.length || 0})
       </div>
-      <ul>{children}</ul>
+      <div className="recipientList">{children}</div>
       <style jsx>{`
         .driver {
           padding-top: 1em;
         }
         .driverName {
-          font-weight: bold;
+          font-weight: 700;
+          font-size: 1em;
           background: ${color}cc;
           color: white;
           padding: 0.25em 0.5em;
         }
 
-        ul {
-          list-style: none;
+        .recipientList {
           border-left: solid 1px ${color};
           color: #333;
         }
@@ -147,7 +147,8 @@ const Recipient: React.FC<RecipientProps> = (props) => {
   const geodata = decodeAirtableGeodata(recipient.fields["Geocode cache"]);
   const marker = markerMap[recipient.id];
   return (
-    <li
+    <div
+      className="recipient"
       key={recipient.id}
       onMouseEnter={(e) => {
         marker.setRadius(MARKER_SIZE.HUGE);
@@ -156,22 +157,21 @@ const Recipient: React.FC<RecipientProps> = (props) => {
         marker.setRadius(MARKER_SIZE.LARGE);
       }}
     >
+      <br />
       <div className="recipientName" style={{ color }}>
         {recipient.fields.NameLookup?.[0]}
         {recipient.fields["Confirmed?"] ? " ✓" : ""}
       </div>
       <div>
         <div className="address">
-          <strong>
-            <a
-              target="gmap"
-              href={encodeURI(
-                `https://www.google.com/maps/dir/${geodata.o.formattedAddress}`
-              )}
-            >
-              {recipient.fields["Address (computed)"]}
-            </a>
-          </strong>
+          <a
+            target="gmap"
+            href={encodeURI(
+              `https://www.google.com/maps/dir/${geodata.o.formattedAddress}`
+            )}
+          >
+            {recipient.fields["Address (computed)"]}
+          </a>
         </div>
 
         <div className="phone">
@@ -182,55 +182,56 @@ const Recipient: React.FC<RecipientProps> = (props) => {
         </div>
 
         {recipient.fields.Notes && (
-          <div className="notes">
+          <blockquote className="notes">
             <span className="header">NOTES</span>{" "}
             <span className="body">{recipient.fields.Notes}</span>
-          </div>
+          </blockquote>
         )}
       </div>
 
-      <style jsx>
-        {`
-          .recipientName {
-            font-weight: bold;
-            padding-bottom: 0.5em;
-          }
+      <style jsx>{`
+        .recipient {
+          padding: 0 1em;
+        }
 
-          .address {
-            padding: 0.25em 0;
-          }
+        .recipientName {
+          font-weight: bold;
+          font-size: 1em;
+        }
 
-          .address a {
-            color: blue;
-          }
+        .address {
+          padding: 0.25em 0;
+        }
 
-          .phone {
-            padding: 0.25em 0;
-          }
+        .address a {
+          font-weight: 500;
+          color: blue;
+        }
 
-          .whatsapp-warning {
-            opacity: 0.6;
-            padding-left: 0.25em;
-          }
+        .phone {
+          padding: 0.25em 0;
+        }
 
-          .notes {
-            padding: 0.5em 0;
-          }
+        .whatsapp-warning {
+          opacity: 0.6;
+          padding-left: 0.25em;
+        }
 
-          .notes .header {
-            font-weight: bold;
-            font-size: 80%;
-            color: #999;
-          }
+        .notes {
+          padding: 0.5em 0;
+        }
 
-          .notes .body {
-            font-style: italic;
-            color: #666;
-          }
+        .notes .header {
+          font-weight: bold;
+          font-size: 80%;
+          color: #999;
+        }
 
-          .notes::content
-        `}
-      </style>
-    </li>
+        .notes .body {
+          font-style: italic;
+          color: #666;
+        }
+      `}</style>
+    </div>
   );
 };
