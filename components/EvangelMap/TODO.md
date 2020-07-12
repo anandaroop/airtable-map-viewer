@@ -4,5 +4,6 @@
   - [-] make easier to switch to tmp dev base
   - [-] more robust for missing recipients, latlngs
   - [x] copy as markdown for slack
-  - [ ] highlight generic point!
+  - [x] highlight generic point! (suppress instead)
   - [ ] secure random
+  - [ ] marker clustering
