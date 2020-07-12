@@ -62,7 +62,11 @@ const toGeoJSONFeature = (
     } = geodata;
 
     if (lat === undefined || lng === undefined) {
-      console.error("LatLng appears to be undefined. Showing geodata and record:", geodata, record)
+      console.error(
+        "LatLng appears to be undefined. Showing geodata and record:",
+        geodata,
+        record
+      );
     }
 
     // munge airtable metainfo for hyperlink building
@@ -88,8 +92,7 @@ const toGeoJSONFeature = (
 
     return feature;
   } catch (e) {
-    console.error("Unable to convert to GeoJSON Feature:", e, record.fields);
-    // swallow this error for now, to have less disruptive server responses
-    // throw e
+    console.error("Unable to convert to GeoJSON Feature:", record.fields);
+    return null;
   }
 };
