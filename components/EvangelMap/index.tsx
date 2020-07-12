@@ -5,7 +5,7 @@ import { useStoreActions } from "./store";
 import { Help } from "./Help";
 import { Container } from "./Container";
 import { Box } from "../common";
-import { Info } from "./Info";
+import { InfoSidebar } from "./InfoSidebar";
 import { API } from "../../lib/api";
 
 const MapWithNoSSR = dynamic(() => import("./Map"), { ssr: false });
@@ -78,7 +78,7 @@ export const EvangelMap = () => {
           <MapWithNoSSR />
         </Box>
         <Box flex="1">
-          <Info />
+          <InfoSidebar />
         </Box>
         <Help />
       </Container>

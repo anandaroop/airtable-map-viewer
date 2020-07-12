@@ -3,8 +3,10 @@ import { DriverList } from "./DriverList";
 import { UnassignedRecipients } from "./UnassignedRecipients";
 import { Warnings } from "./Warnings";
 import { Summary } from "./Summary";
+import { useContext } from "react";
+import { UserContext } from "../common/Authenticated";
 
-export const Info = () => {
+export const InfoSidebar = () => {
   const {
     items: recipientItems,
     warnings: { genericLatLngs },
@@ -19,10 +21,17 @@ export const Info = () => {
     .filter((r) => !r.fields?.Driver?.length)
     .filter((r) => !genericLatLngs.includes(r.id));
 
+  const userContext = useContext(UserContext);
+
   return (
     <>
       <div className="info">
         <Summary />
+        {userContext?.name === "anandaroop.roy@gmail.com" && (
+          <div className="optimize" style={{ margin: "1em 0" }}>
+            <button>Admin only: optimize em!</button>
+          </div>
+        )}
         <DriverList
           driverItems={driverItems}
           colorMap={colorMap}
