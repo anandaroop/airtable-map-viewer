@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 
-import { useStoreState, useStoreActions } from "../store";
-import { API } from "../lib/api";
+import { useStoreState, useStoreActions } from "./store";
+import { API } from "../../lib/api";
 import { ViewToggle } from "./ViewToggle";
-import { clusterPalette as palette } from "../lib/palette";
+import { clusterPalette as palette } from "../../lib/palette";
 
 export const ViewSelector = () => {
   const DEBUG = useStoreState((state) => state.views.debug);

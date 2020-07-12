@@ -13,10 +13,10 @@ import {
 import { FeatureCollection } from "geojson";
 import { clustersDbscan, clustersKmeans } from "@turf/turf";
 
-import { MetaFields } from "../lib/airtable";
-import { toGeoJSONFeatureCollection } from "../lib/geojson";
-import { API } from "../lib/api";
-import palette from "../lib/palette";
+import { MetaFields } from "../../../lib/airtable";
+import { toGeoJSONFeatureCollection } from "../../../lib/geojson";
+import { API } from "../../../lib/api";
+import palette from "../../../lib/palette";
 
 export interface ViewsModel {
   // STATE

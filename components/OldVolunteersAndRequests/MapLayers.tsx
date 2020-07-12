@@ -2,8 +2,8 @@ import { GeoJSON, Map, Marker, Popup, TileLayer } from "react-leaflet";
 import { CircleMarker } from "leaflet";
 import { Feature, Point } from "geojson";
 
-import { useStoreState } from "../store";
-import { clusterPalette } from "../lib/palette";
+import { useStoreState } from "./store";
+import { clusterPalette } from "../../lib/palette";
 
 const MapLayers = () => {
   const DEBUG = useStoreState((state) => state.views.debug);

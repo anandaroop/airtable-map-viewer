@@ -3,8 +3,8 @@ import { StoreProvider } from 'easy-peasy';
 
 import { Authenticated, LayoutWithUserHeader } from "../components/common";
 
-import { MapViewer } from "../components/MapViewer";
-import { store } from "../store";
+import { MapViewer } from "../components/OldVolunteersAndRequests/MapViewer";
+import { store } from "../components/OldVolunteersAndRequests/store";
 
 export default function VolunteersAndRequests() {
   return (

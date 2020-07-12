@@ -1,5 +1,5 @@
-import { useStoreState, useStoreActions } from "../store";
-import { ViewsItem } from "../store/views";
+import { useStoreState, useStoreActions } from "./store";
+import { ViewsItem } from "./store/views";
 
 interface ViewToggleProps {
   metaRecordId: string;
