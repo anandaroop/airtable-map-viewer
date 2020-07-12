@@ -14,10 +14,25 @@ export const Help = () => {
               Close ✕
             </div>
             <div className="scrollable">
+              <h2>Airtable Map Viewer for Evangel Deliveries</h2>
+
+              <p>Check out the notes below.</p>
+
+              <p>
+                If you still have questions drop em in the the{" "}
+                <a href="https://queensdsa.slack.com/archives/C012THPS340">
+                  #mutualaid-data
+                </a>{" "}
+                channel
+              </p>
+
+              <h3>What this is</h3>
+
               <p>
                 This map app provides a friendlier view into the Airtable tables
                 we use to manage deliveries.
               </p>
+
               <p>
                 All <em>updates</em> to driving assignments are still made in
                 the Airtable interface, but this map interface should make it
@@ -25,6 +40,9 @@ export const Help = () => {
                 where they are coming from, which stops are assigned to them,
                 which stops still need to be assigned, and so on.
               </p>
+
+              <h3>How to use this</h3>
+
               <p>There are basically two different ways to get this done:</p>
 
               <ol>
@@ -76,16 +94,65 @@ export const Help = () => {
                 Filled discs represent stops. Stops will be gray until they are
                 assigned; then they will be color-coded to match their driver.
               </p>
+
               <p>
                 Once all assignments are done, use the "Copy" button to copy a
                 driver itinerary for pasting into Slack.
               </p>
+
+              <h3>Pre-preparation</h3>
+
+              <p>If you are about to do route planning, this has probably already been done for you, but just in case…</p>
+
               <p>
-                For further questions, drop a note in the the{" "}
-                <a href="https://queensdsa.slack.com/archives/C012THPS340">
-                  #mutualaid-data
-                </a>{" "}
-                channel
+                These steps need to be performed beforehand, to get the tool set
+                up for the next round of deliveries
+              </p>
+
+              <ul>
+                <li>
+                  Change filter on the view{" "}
+                  <strong>
+                    Volunteers: <em>Current Delivery Drivers Map</em>
+                  </strong>{" "}
+                  to match the name of the upcoming delivery, e.g. `Evangel -
+                  2020-07-07`
+                </li>
+
+                <li>
+                  Change filter on the view{" "}
+                  <strong>
+                    Delivery Recipients: <em>Map</em>
+                  </strong>{" "}
+                  to match the name of the upcoming delivery, e.g. `Evangel -
+                  2020-07-07`
+                </li>
+                <li>
+                  Double check that the Map Block in{" "}
+                  <strong>
+                    Maps: Coordinated Deliveries &gt;{" "}
+                    <em>Delivery Recipients: Map</em>
+                  </strong>{" "}
+                  is configured correctly (i.e. pulling from the Map view)
+                </li>
+
+                <li>
+                  Double check that the Map Block in{" "}
+                  <strong>
+                    Maps: Coordinated Deliveries &gt;{" "}
+                    <em>Volunteers: Current Delivery Drivers Map</em>
+                  </strong>{" "}
+                  is configured correctly (i.e. pulling from the Current
+                  Delivery Drivers Map view)
+                </li>
+              </ul>
+
+              <p>
+                <em>
+                  NOTE: Sometimes it seems that simply opening the the Map Block
+                  configuration is necessary to kick off geocoding of all the
+                  recipient records.
+                </em>
               </p>
             </div>
           </div>
@@ -110,7 +177,7 @@ export const Help = () => {
 
         .content {
           padding: 1em;
-          width: 20em;
+          width: 22em;
         }
 
         .toggle {
