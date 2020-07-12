@@ -5,16 +5,19 @@ import { Warnings } from "./Warnings";
 import { Summary } from "./Summary";
 
 export const Info = () => {
-  const recipientItems = useStoreState((state) => state.recipients.items);
+  const {
+    items: recipientItems,
+    warnings: { genericLatLngs },
+  } = useStoreState((state) => state.recipients);
   const colorMap = useStoreState((state) => state.recipients.colorMap);
   const markerMap = useStoreState((state) => state.recipients.markerMap);
 
   const driverItems = useStoreState((state) => state.drivers.items);
   const itineraryMap = useStoreState((state) => state.drivers.itineraryMap);
 
-  const unassignedRecipients = Object.values(recipientItems).filter(
-    (r) => !r.fields?.Driver?.length
-  );
+  const unassignedRecipients = Object.values(recipientItems)
+    .filter((r) => !r.fields?.Driver?.length)
+    .filter((r) => !genericLatLngs.includes(r.id));
 
   return (
     <>
@@ -38,7 +41,6 @@ export const Info = () => {
           overflow: scroll;
           padding: 1em;
         }
-
       `}</style>
     </>
   );

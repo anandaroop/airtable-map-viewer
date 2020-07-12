@@ -37,6 +37,14 @@ const Map = () => {
               point: Feature<Point, RecipientFields & { recordId: string }>,
               latLng
             ) => {
+              const isInvalidGenericPoint = recipients.warnings.genericLatLngs.includes(
+                point.properties.recordId
+              );
+
+              if (isInvalidGenericPoint) {
+                return null;
+              }
+
               const fillColor = point.properties["marker-color"] || "gray";
 
               const marker = new CircleMarker(latLng, {
