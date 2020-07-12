@@ -36,11 +36,13 @@ export const UnassignedRecipients: React.FC<UnassignedRecipientsProps> = (
               key={recipient.id}
               className="recipient"
               onMouseEnter={() => {
+                if (!marker) return;
                 marker.setRadius(MARKER_SIZE.LARGE);
                 marker.setStyle({ color: "red", fillColor: "none", weight: 4 });
                 marker.bringToFront();
               }}
               onMouseLeave={() => {
+                if (!marker) return;
                 marker.setRadius(MARKER_SIZE.REGULAR);
                 marker.setStyle({ color: "none", fillColor: "gray" });
                 marker.bringToBack();
