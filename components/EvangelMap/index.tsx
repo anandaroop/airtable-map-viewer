@@ -10,7 +10,12 @@ import { API } from "../../lib/api";
 
 const MapWithNoSSR = dynamic(() => import("./Map"), { ssr: false });
 
-export const EvangelMap = () => {
+interface EvangelMapProps {
+  driversViewID: string;
+  recipientsViewID: string;
+}
+
+export const EvangelMap = ({ driversViewID, recipientsViewID }) => {
   const setAllRecipientItems = useStoreActions(
     (actions) => actions.recipients.setAll
   );
@@ -30,7 +35,7 @@ export const EvangelMap = () => {
 
       // fetch drivers' metadata
       const driversView = views.filter(
-        (r) => r.fields["View ID"] == "viwI5p69OfCsAjEE6" // aka Current Delivery Drivers Map
+        (r) => r.fields["View ID"] == driversViewID // aka Volunteers: Current Delivery Drivers Map
       )[0];
       setDriverMetadata({ data: driversView.fields });
 
@@ -45,7 +50,7 @@ export const EvangelMap = () => {
 
       // fetch recipients' metadata
       const recipientsView = views.filter(
-        (r) => r.fields["View ID"] == "viwJGcKgSrTDNX6DP" // aka Delivery Recipients: Map
+        (r) => r.fields["View ID"] == recipientsViewID // aka Delivery Recipients: Map
       )[0];
       setRecipientMetadata({ data: recipientsView.fields });
 
@@ -100,7 +105,8 @@ export const EvangelMap = () => {
             padding-bottom: 0.5em;
           }
 
-          ol, ul {
+          ol,
+          ul {
             padding-left: 1.5em;
           }
         `}
