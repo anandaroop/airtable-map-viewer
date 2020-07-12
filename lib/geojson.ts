@@ -6,6 +6,9 @@ import { AirtableCachedGeocode } from "./airtable";
  * Pull the lat/lng out of the base64-encoded geocoder result cached by Airtable
  */
 export const decodeAirtableGeodata = (value: string): AirtableCachedGeocode => {
+  if (!value?.length) {
+    throw new Error("Missing geocode value");
+  }
   const geocode = value.substring(3); // lop off leading status indicator emoji
   const buffer = Buffer.from(geocode, "base64");
   const text = buffer.toString("ascii").replace(/\\"/g, "");

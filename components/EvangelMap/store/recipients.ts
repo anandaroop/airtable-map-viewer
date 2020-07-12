@@ -75,6 +75,7 @@ export interface RecipientsModel {
   warnings: Computed<
     RecipientsModel,
     {
+      missingGeocodes: string[];
       missingLatLngs: string[];
       genericLatLngs: string[];
       unavailableDrivers: string[];
@@ -152,31 +153,37 @@ export const recipientsModel: RecipientsModel = {
       const recipients = Object.values(recipientItems);
       const driverIds = Object.values(driverItems).map((d) => d.id);
 
-      let missingLatLngs = [],
+      let missingGeocodes = [],
+        missingLatLngs = [],
         genericLatLngs = [],
         unavailableDrivers = [];
 
       const GENERIC_LAT_LNG: Feature<Point> = point([-73.79485, 40.72822]);
 
       recipients.forEach((r) => {
-        const geodata = decodeAirtableGeodata(r.fields["Geocode cache"]);
-        const {
-          o: { lat, lng },
-        } = geodata;
+        try {
+          const geodata = decodeAirtableGeodata(r.fields["Geocode cache"]);
+          const {
+            o: { lat, lng },
+          } = geodata;
 
-        // missing lat lng
-        if (!lat || !lng) {
-          missingLatLngs.push(r.id);
-        } else {
-          // generic lat lng
-          const distanceToGenericPoint = distance(
-            point([lng, lat]),
-            GENERIC_LAT_LNG,
-            { units: "meters" }
-          );
-          if (distanceToGenericPoint < 10) {
-            genericLatLngs.push(r.id);
+          // missing lat lng
+          if (!lat || !lng) {
+            missingLatLngs.push(r.id);
+          } else {
+            // generic lat lng
+            const distanceToGenericPoint = distance(
+              point([lng, lat]),
+              GENERIC_LAT_LNG,
+              { units: "meters" }
+            );
+            if (distanceToGenericPoint < 10) {
+              genericLatLngs.push(r.id);
+            }
           }
+        } catch (err) {
+          // missing cached geocode
+          missingGeocodes.push(r.id);
         }
 
         // unavailable driver
@@ -187,6 +194,7 @@ export const recipientsModel: RecipientsModel = {
       });
 
       return {
+        missingGeocodes,
         missingLatLngs,
         genericLatLngs,
         unavailableDrivers,

@@ -18,9 +18,24 @@ export const Warnings = () => {
   return (
     <>
       <div className="warnings">
-        {warnings.missingLatLngs?.length > 0 && (
+        {warnings.missingGeocodes?.length > 0 && (
           <ul>
             ⚠️ Missing geocodes
+            {warnings.missingGeocodes.map((rid) => {
+              return (
+                <li key={rid}>
+                  <AirtableHyperlink tid={tid} vid={vid} rid={rid}>
+                    {recipients[rid].fields[primaryFieldName]}
+                  </AirtableHyperlink>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
+        {warnings.missingLatLngs?.length > 0 && (
+          <ul>
+            ⚠️ Missing latitude/longitude
             {warnings.missingLatLngs.map((rid) => {
               return (
                 <li key={rid}>
