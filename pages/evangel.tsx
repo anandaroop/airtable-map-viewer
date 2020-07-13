@@ -7,12 +7,12 @@ import { store } from "../components/EvangelMap/store";
 
 const AIRTABLE_IDS = {
   // real
-  // DRIVERS_VIEW: "viwI5p69OfCsAjEE6",
-  // RECIPIENTS_VIEW: "viwJGcKgSrTDNX6DP",
+  DRIVERS_VIEW: "viwI5p69OfCsAjEE6",
+  RECIPIENTS_VIEW: "viwJGcKgSrTDNX6DP",
 
-  // fake
-  DRIVERS_VIEW: "viwP640WQnuetMCx6",
-  RECIPIENTS_VIEW: "viwQHRE3UzLpGq4wP",
+  // // fake
+  // DRIVERS_VIEW: "viwP640WQnuetMCx6",
+  // RECIPIENTS_VIEW: "viwQHRE3UzLpGq4wP",
 };
 
 export default function Evangel() {

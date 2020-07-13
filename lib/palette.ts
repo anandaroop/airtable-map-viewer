@@ -41,6 +41,9 @@ export const chromaSaturated = [
   // chroma("gray").hex(),
   chroma("violet").hex(),
   chroma("goldenrod").hex(),
+  chroma("magenta").hex(),
+  chroma("cyan").hex(),
+  chroma("pink").hex(),
 ];
 
 export default chromaFancy;
