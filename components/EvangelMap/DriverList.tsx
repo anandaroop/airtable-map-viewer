@@ -12,6 +12,8 @@ export const MARKER_SIZE = {
   HUGE: 16,
 };
 
+const EVANGEL_ADDRESS = "3920 27th St, Long Island City, Queens, NY";
+
 interface DriverListProps {
   driverItems: DriversModel["items"];
   colorMap: RecipientsModel["colorMap"];
@@ -27,15 +29,35 @@ export const DriverList: React.FC<DriverListProps> = (props) => {
   const drivers = Object.values(driverItems);
 
   useEffect(() => {
-    const clipboard = new Clipboard("button.copy", {
+    const slack = new Clipboard("button.copy-slack", {
       target: function (trigger) {
         const driverDiv = trigger.parentElement.nextSibling as Element;
         return driverDiv;
       },
     });
 
+    const mapquest = new Clipboard("button.copy-mapquest", {
+      text: function (trigger) {
+        const driverDiv = trigger.parentElement.nextSibling as HTMLDivElement;
+        const recipientAddresses = Array.from(
+          driverDiv.querySelectorAll(".recipient .address")
+        ).map((el: HTMLDivElement) => el.dataset.normalizedAddress);
+        const driverHomeAddress = driverDiv.dataset.normalizedAddress;
+
+        const route = [
+          EVANGEL_ADDRESS,
+          ...recipientAddresses,
+          driverHomeAddress,
+        ];
+        const text = route.join("\n");
+        console.log(text);
+        return text;
+      },
+    });
+
     return () => {
-      clipboard.destroy();
+      slack.destroy();
+      mapquest.destroy();
     };
   }, []);
 
@@ -112,10 +134,13 @@ const Driver: React.FC<DriverProps> = (props) => {
     []
   );
 
+  const geodata = decodeAirtableGeodata(driver.fields["Geocode cache"]);
+
   return (
-    <div className="copy-button-and-driver">
-      <div className="copy-button">
-        <button className="copy">copy</button>
+    <div className="copy-buttons-and-driver">
+      <div className="copy-buttons">
+        <button className="copy-slack">Slack</button>
+        <button className="copy-mapquest">Mapquest</button>
       </div>
 
       <div
@@ -129,6 +154,7 @@ const Driver: React.FC<DriverProps> = (props) => {
           theseMarkers.map((m) => m.setRadius(MARKER_SIZE.REGULAR));
           allOtherMarkers.map((m) => m.setRadius(MARKER_SIZE.REGULAR));
         }}
+        data-normalized-address={geodata.o.formattedAddress}
       >
         <div className="driverName">
           <span>
@@ -138,17 +164,17 @@ const Driver: React.FC<DriverProps> = (props) => {
         <div className="recipientList">{children}</div>
       </div>
       <style jsx>{`
-        .copy-button-and-driver {
+        .copy-buttons-and-driver {
           position: relative;
         }
 
-        .copy-button {
+        .copy-buttons {
           position: absolute;
           right: 0.2em;
           top: 1.2em;
         }
 
-        .copy-button button {
+        .copy-buttons button {
           border: solid 1px #ffffffff;
           background: #ffffff33;
           color: white;
@@ -160,7 +186,7 @@ const Driver: React.FC<DriverProps> = (props) => {
           cursor: pointer;
         }
 
-        .copy-button button:hover {
+        .copy-buttons button:hover {
           opacity: 1;
         }
 
@@ -216,7 +242,10 @@ const Recipient: React.FC<RecipientProps> = (props) => {
         {recipient.fields["Confirmed?"] ? " ✓" : ""}
       </div>
       <div>
-        <div className="address">
+        <div
+          className="address"
+          data-normalized-address={geodata.o.formattedAddress}
+        >
           <a
             target="gmap"
             href={encodeURI(

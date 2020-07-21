@@ -18,9 +18,14 @@ import { MetaFields } from "../../../lib/airtable";
 import { StoreModel } from "./index";
 import { RecipientRecord } from "./recipients";
 
-export type DriverRecord = Airtable.Record<{
+interface DriverFields {
   Name: string;
-}>;
+
+  /** Geocoded address, encoded */
+  "Geocode cache": string;
+}
+
+export type DriverRecord = Airtable.Record<DriverFields>;
 
 export interface DriversModel {
   // STATE

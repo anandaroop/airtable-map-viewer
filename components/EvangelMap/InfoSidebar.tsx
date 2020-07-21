@@ -27,11 +27,6 @@ export const InfoSidebar = () => {
     <>
       <div className="info">
         <Summary />
-        {userContext?.name === "anandaroop.roy@gmail.com" && (
-          <div className="optimize" style={{ margin: "1em 0" }}>
-            <button>Admin only: optimize em!</button>
-          </div>
-        )}
         <DriverList
           driverItems={driverItems}
           colorMap={colorMap}
