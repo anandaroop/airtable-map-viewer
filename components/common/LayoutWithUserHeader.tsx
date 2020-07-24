@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, ReactElement } from "react";
 
 import { UserContext } from "./Authenticated";
 import Head from "next/head";
@@ -12,7 +12,9 @@ import Head from "next/head";
  * `<main>` will include the children passed into the component.
  *
  */
-export const LayoutWithUserHeader: React.FC = ({ children }) => {
+export const LayoutWithUserHeader: React.FC<{
+  additionalLinks?: ReactElement;
+}> = ({ children, additionalLinks }) => {
   const user = useContext(UserContext);
   return (
     <>
@@ -24,9 +26,12 @@ export const LayoutWithUserHeader: React.FC = ({ children }) => {
       </Head>
       <div className="container">
         <header>
-          <a href="https://www.queensdsamutualaid.org/">
-            <div className="logo"></div>
-          </a>
+          <nav className="links">
+            <a href="https://www.queensdsamutualaid.org/">
+              <div className="logo"></div>
+            </a>
+            <div className="additional-links">{additionalLinks}</div>
+          </nav>
           <div className="user">
             <span className="name">{user.nickname}</span>
             <span className="logout">
@@ -77,6 +82,12 @@ export const LayoutWithUserHeader: React.FC = ({ children }) => {
           background-size: auto 4rem;
           background-repeat: no-repeat;
           background-color: #e7212f;
+          margin-right: 2em;
+        }
+
+        header .links {
+          display: flex;
+          align-items: center;
         }
 
         header .user .name {
@@ -95,7 +106,7 @@ export const LayoutWithUserHeader: React.FC = ({ children }) => {
 
         main {
           flex: 1 0 calc(100vh - 3rem);
-          overflow:hidden;
+          overflow: hidden;
         }
       `}</style>
     </>
