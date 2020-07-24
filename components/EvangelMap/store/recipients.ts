@@ -37,6 +37,12 @@ export interface RecipientFields {
   /** Useful notes for driver */
   Notes: string;
 
+  /** Weekly recurring notes, carried over per recipient */
+  "Recurring notes": string;
+
+  /** Dietary restrictions driver may need to know about */
+  "Dietary restrictions": string;
+
   /** ID of the linked Neighborhood table record for this driver */
   Neighborhood: string[];
 

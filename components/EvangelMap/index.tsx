@@ -66,6 +66,8 @@ export const EvangelMap = ({ driversViewID, recipientsViewID }) => {
           "NameLookup",
           "Neighborhood",
           "Notes",
+          "Recurring notes",
+          "Dietary restrictions",
           "Phone",
           "Whatsapp Only",
         ],

@@ -225,6 +225,12 @@ const Recipient: React.FC<RecipientProps> = (props) => {
 
   const geodata = decodeAirtableGeodata(recipient.fields["Geocode cache"]);
   const marker = markerMap[recipient.id];
+  const hasNotes = Boolean(
+    recipient.fields["Recurring notes"] ||
+      recipient.fields["Notes"] ||
+      recipient.fields["Dietary restrictions"]
+  );
+
   return (
     <div
       className="recipient"
@@ -263,11 +269,23 @@ const Recipient: React.FC<RecipientProps> = (props) => {
           )}
         </div>
 
-        {recipient.fields.Notes && (
-          <blockquote className="notes">
-            <span className="header">NOTES</span>{" "}
-            <span className="body">{recipient.fields.Notes}</span>
-          </blockquote>
+        {hasNotes && (
+          <>
+            <ul className="notes">
+              <div className="header">NOTES</div>
+              {recipient.fields["Notes"] && (
+                <li className="body">{recipient.fields.Notes}</li>
+              )}
+              {recipient.fields["Recurring notes"] && (
+                <li className="body">{recipient.fields["Recurring notes"]}</li>
+              )}
+              {recipient.fields["Dietary restrictions"] && (
+                <li className="body">
+                  <strong>Dietary restrictions</strong>: {recipient.fields["Dietary restrictions"]}
+                </li>
+              )}
+            </ul>
+          </>
         )}
       </div>
 
@@ -299,19 +317,22 @@ const Recipient: React.FC<RecipientProps> = (props) => {
           padding-left: 0.25em;
         }
 
-        .notes {
-          padding: 0.5em 0;
+        ul.notes {
+          padding: 0 0 0 1em;
+          border-left: solid 2px #ddd;
         }
 
         .notes .header {
           font-weight: bold;
           font-size: 80%;
           color: #999;
+          margin: 0.5em 0;
         }
 
-        .notes .body {
+        ul.notes li.body {
           font-style: italic;
           color: #666;
+          margin-left: 1em;
         }
       `}</style>
     </div>
