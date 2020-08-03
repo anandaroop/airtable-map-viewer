@@ -134,84 +134,92 @@ const Driver: React.FC<DriverProps> = (props) => {
     []
   );
 
-  const geodata = decodeAirtableGeodata(driver.fields["Geocode cache"]);
-
-  return (
-    <div className="copy-buttons-and-driver">
-      <div className="copy-buttons">
-        <button className="copy-slack">Slack</button>
-        <button className="copy-mapquest">Mapquest</button>
-      </div>
-
-      <div
-        className="driver"
-        key={driver.id}
-        onMouseEnter={() => {
-          theseMarkers.map((m) => m.setRadius(MARKER_SIZE.LARGE));
-          allOtherMarkers.map((m) => m.setRadius(MARKER_SIZE.TINY));
-        }}
-        onMouseLeave={() => {
-          theseMarkers.map((m) => m.setRadius(MARKER_SIZE.REGULAR));
-          allOtherMarkers.map((m) => m.setRadius(MARKER_SIZE.REGULAR));
-        }}
-        data-normalized-address={geodata.o.formattedAddress}
-      >
-        <div className="driverName">
-          <span>
-            {driver.fields.Name} ({recipientIds?.length || 0})
-          </span>
+  try {
+    const geodata = decodeAirtableGeodata(driver.fields["Geocode cache"]);
+    return (
+      <div className="copy-buttons-and-driver">
+        <div className="copy-buttons">
+          <button className="copy-slack">Slack</button>
+          <button className="copy-mapquest">Mapquest</button>
         </div>
-        <div className="recipientList">{children}</div>
+
+        <div
+          className="driver"
+          key={driver.id}
+          onMouseEnter={() => {
+            theseMarkers.map((m) => m.setRadius(MARKER_SIZE.LARGE));
+            allOtherMarkers.map((m) => m.setRadius(MARKER_SIZE.TINY));
+          }}
+          onMouseLeave={() => {
+            theseMarkers.map((m) => m.setRadius(MARKER_SIZE.REGULAR));
+            allOtherMarkers.map((m) => m.setRadius(MARKER_SIZE.REGULAR));
+          }}
+          data-normalized-address={geodata.o.formattedAddress}
+        >
+          <div className="driverName">
+            <span>
+              {driver.fields.Name} ({recipientIds?.length || 0})
+            </span>
+          </div>
+          <div className="recipientList">{children}</div>
+        </div>
+        <style jsx>{`
+          .copy-buttons-and-driver {
+            position: relative;
+          }
+
+          .copy-buttons {
+            position: absolute;
+            right: 0.2em;
+            top: 1.2em;
+          }
+
+          .copy-buttons button {
+            border: solid 1px #ffffffff;
+            background: #ffffff33;
+            color: white;
+            border-radius: 0.25em;
+            padding: 0 0.25em;
+            height: 1.6em;
+            margin-left: 0.25em;
+            opacity: 0.75;
+            cursor: pointer;
+          }
+
+          .copy-buttons button:hover {
+            opacity: 1;
+          }
+
+          .driver {
+            padding-top: 1em;
+          }
+
+          .driverName {
+            font-weight: 700;
+            font-size: 1em;
+            line-height: 1.8em;
+            background: ${color}cc;
+            color: white;
+            padding: 0 0.5em;
+            display: flex;
+            justify-content: space-between;
+          }
+
+          .recipientList {
+            border-left: solid 1px ${color};
+            color: #333;
+          }
+        `}</style>
       </div>
-      <style jsx>{`
-        .copy-buttons-and-driver {
-          position: relative;
-        }
-
-        .copy-buttons {
-          position: absolute;
-          right: 0.2em;
-          top: 1.2em;
-        }
-
-        .copy-buttons button {
-          border: solid 1px #ffffffff;
-          background: #ffffff33;
-          color: white;
-          border-radius: 0.25em;
-          padding: 0 0.25em;
-          height: 1.6em;
-          margin-left: 0.25em;
-          opacity: 0.75;
-          cursor: pointer;
-        }
-
-        .copy-buttons button:hover {
-          opacity: 1;
-        }
-
-        .driver {
-          padding-top: 1em;
-        }
-
-        .driverName {
-          font-weight: 700;
-          font-size: 1em;
-          line-height: 1.8em;
-          background: ${color}cc;
-          color: white;
-          padding: 0 0.5em;
-          display: flex;
-          justify-content: space-between;
-        }
-
-        .recipientList {
-          border-left: solid 1px ${color};
-          color: #333;
-        }
-      `}</style>
-    </div>
-  );
+    );
+  } catch (error) {
+    console.error({ error });
+    return (
+      <div>
+        <p>⚠️ This driver couldn't be geocoded and shown on the map.</p>
+      </div>
+    );
+  }
 };
 
 interface RecipientProps {
@@ -281,7 +289,8 @@ const Recipient: React.FC<RecipientProps> = (props) => {
               )}
               {recipient.fields["Dietary restrictions"] && (
                 <li className="body">
-                  <strong>Dietary restrictions</strong>: {recipient.fields["Dietary restrictions"]}
+                  <strong>Dietary restrictions</strong>:{" "}
+                  {recipient.fields["Dietary restrictions"]}
                 </li>
               )}
             </ul>
