@@ -50,7 +50,7 @@ export const Help = () => {
                   Keep the Airtable{" "}
                   <a
                     target="grid"
-                    href="https://airtable.com/tbl8XAiO21AVgeuvw/viwJGcKgSrTDNX6DP"
+                    href={`https://airtable.com/${process.env.NEXT_PUBLIC_AIRTABLE_RECIPIENTS_TABLE_ID}/${process.env.NEXT_PUBLIC_AIRTABLE_RECIPIENTS_MAP_VIEW_ID}`}
                   >
                     grid view for this delivery
                   </a>{" "}

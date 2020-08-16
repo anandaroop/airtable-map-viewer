@@ -6,13 +6,10 @@ import { EvangelMap } from "../components/EvangelMap";
 import { store } from "../components/EvangelMap/store";
 
 const AIRTABLE_IDS = {
-  // real
-  DRIVERS_VIEW: "viwI5p69OfCsAjEE6",
-  RECIPIENTS_VIEW: "viwJGcKgSrTDNX6DP",
-
-  // // fake
-  // DRIVERS_VIEW: "viwP640WQnuetMCx6",
-  // RECIPIENTS_VIEW: "viwQHRE3UzLpGq4wP",
+  DRIVERS_TABLE: process.env.NEXT_PUBLIC_AIRTABLE_DRIVERS_TABLE_ID,
+  DRIVERS_VIEW: process.env.NEXT_PUBLIC_AIRTABLE_DRIVERS_MAP_VIEW_ID,
+  RECIPIENTS_TABLE: process.env.NEXT_PUBLIC_AIRTABLE_RECIPIENTS_TABLE_ID,
+  RECIPIENTS_VIEW: process.env.NEXT_PUBLIC_AIRTABLE_RECIPIENTS_MAP_VIEW_ID,
 };
 
 export default function Evangel() {
@@ -28,14 +25,14 @@ export default function Evangel() {
             <div className="airtable">
               Airtable: &nbsp;
               <a
-                href="https://airtable.com/tbl8XAiO21AVgeuvw/viwJGcKgSrTDNX6DP?blocks=hide"
+                href={`https://airtable.com/${AIRTABLE_IDS.RECIPIENTS_TABLE}/${AIRTABLE_IDS.RECIPIENTS_VIEW}?blocks=hide`}
                 target="_airtable"
               >
                 Deliveries
               </a>
               &nbsp;|&nbsp;
               <a
-                href="https://airtable.com/tbl4179GQmtEKDf4D/viwI5p69OfCsAjEE6?blocks=hide"
+                href={`https://airtable.com/${AIRTABLE_IDS.DRIVERS_TABLE}/${AIRTABLE_IDS.DRIVERS_VIEW}?blocks=hide`}
                 target="_airtable"
               >
                 Drivers
