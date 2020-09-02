@@ -1,11 +1,12 @@
 # TODO
   - [x] copying from a new notes field on the Request table specifically for recurring  --> Notes
-  - [?] separate field for Driver Notes?
-  - [-] make easier to switch to tmp dev base
+  - [x] separate field for Driver Notes?
+  - [x] make easier to switch to tmp dev base
   - [x] more robust for missing recipients, latlngs
   - [x] copy as markdown for slack
   - [x] highlight generic point! (suppress instead)
-  - [ ] bring recur col into driver list
-  - [ ] dietary field too
+  - [x] bring recur col into driver list
+  - [x] dietary field too
+  - [ ] Slack oauth
   - [ ] marker clustering
-  - [ ] secure random
+  - [ ] change pin shape after assignment (to show duplicates better)
