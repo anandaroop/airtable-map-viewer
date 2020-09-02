@@ -1,3 +1,27 @@
+# Airtable Map Viewer: route planning for mutual aid
+
+This app simplifies the process of assembling itineraries for drivers doing coordinated food delivery dropoffs.
+
+It was developed in 2020 as part of the Queens DSA Mutual Aid committee's response to problems of food insecurity and inadequate govermental response in the wake of COVID.
+
+It looks like this (all fake data, no PII):
+
+<img src="https://user-images.githubusercontent.com/140521/92034002-9e6c3880-ed3a-11ea-824a-2982af6fe8e4.png" title="It's all fake data, no PII" />
+
+It's not exactly turnkey, as it is fairly coupled with our particular Airtable schemas, but it may be adaptable by other organizations as well.
+
+Components:
+
+- An **Airtable** base with tables for volunteers, requesters, and deliveries
+- Geocoding enabled via the **Airtable Map block**, and an API key issuing geocoding requests to the **Google Geocoding API**
+- This NextJS app, which provides an enhanced alternative front-end to the Airtable interface's geocoded/mapped entries.
+- **Auth0** for authentication to the NextJS app
+
+
+![Airtable Map Viewer](https://user-images.githubusercontent.com/140521/92038673-c3b07500-ed41-11ea-98cc-e0841c2bee25.png)
+
+<!--
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
@@ -28,3 +52,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+ -->
