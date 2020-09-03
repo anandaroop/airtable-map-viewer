@@ -43,6 +43,9 @@ export interface RecipientFields {
   /** Dietary restrictions driver may need to know about */
   "Dietary restrictions": string;
 
+  /** Recipient's preferred language  */
+  "Language": string;
+
   /** ID of the linked Neighborhood table record for this driver */
   Neighborhood: string[];
 

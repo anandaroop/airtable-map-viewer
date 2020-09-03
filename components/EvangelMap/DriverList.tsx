@@ -236,7 +236,8 @@ const Recipient: React.FC<RecipientProps> = (props) => {
   const hasNotes = Boolean(
     recipient.fields["Recurring notes"] ||
       recipient.fields["Notes"] ||
-      recipient.fields["Dietary restrictions"]
+      recipient.fields["Dietary restrictions"] ||
+      recipient.fields["Language"]
   );
 
   return (
@@ -289,10 +290,16 @@ const Recipient: React.FC<RecipientProps> = (props) => {
               )}
               {recipient.fields["Dietary restrictions"] && (
                 <li className="body">
-                  <strong>Dietary restrictions</strong>:{" "}
-                  {recipient.fields["Dietary restrictions"]}
+                  Dietary restrictions:{" "}
+                  <strong>{recipient.fields["Dietary restrictions"]}</strong>
                 </li>
               )}
+              {recipient.fields["Language"] &&
+                recipient.fields["Language"] != "English" && (
+                  <li className="body">
+                    Preferred language: <strong>{recipient.fields["Language"]}</strong>
+                  </li>
+                )}
             </ul>
           </>
         )}
