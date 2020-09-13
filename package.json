@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "deploy": "vercel deploy --prod"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^0.13.0",
