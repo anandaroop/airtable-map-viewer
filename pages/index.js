@@ -35,7 +35,7 @@ export default function Home() {
           width: 10em;
           border: solid 1px #e7212f;
           border-radius: 0.25em;
-          margin: 0 2em 0 0;
+          margin: 0 2em 2em 0;
           padding: 1em;
           line-height: 1.6;
           text-decoration: none;
