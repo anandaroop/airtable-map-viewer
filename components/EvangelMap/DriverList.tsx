@@ -231,6 +231,9 @@ interface RecipientProps {
 const Recipient: React.FC<RecipientProps> = (props) => {
   const { recipient, color, markerMap } = props;
 
+  const tblId = useStoreState((state) => state.recipients.metadata["Table ID"]);
+  const viwId = useStoreState((state) => state.recipients.metadata["View ID"]);
+
   const geodata = decodeGeodata(recipient.fields["Geocode cache"]);
   const marker = markerMap[recipient.id];
   const hasNotes = Boolean(
@@ -252,8 +255,17 @@ const Recipient: React.FC<RecipientProps> = (props) => {
       }}
     >
       <br />
-      <div className="recipientName" style={{ color }}>
-        {recipient.fields.NameLookup?.[0]}
+      <div className="recipientName">
+        <a
+          target="airtable"
+          // href={`https://airtable.com/${tblId}/${viwId}/${recipient.id}`}
+          style={{ color, cursor: "pointer" }}
+          onClick={() => {
+            window.open(`https://airtable.com/${tblId}/${viwId}/${recipient.id}`, "airtable")
+          }}
+        >
+          {recipient.fields.NameLookup?.[0]}
+        </a>
         {recipient.fields["Confirmed?"] ? " ✓" : ""}
       </div>
       <div>
@@ -297,7 +309,8 @@ const Recipient: React.FC<RecipientProps> = (props) => {
               {recipient.fields["Language"] &&
                 recipient.fields["Language"] != "English" && (
                   <li className="body">
-                    Preferred language: <strong>{recipient.fields["Language"]}</strong>
+                    Preferred language:{" "}
+                    <strong>{recipient.fields["Language"]}</strong>
                   </li>
                 )}
             </ul>
@@ -349,6 +362,10 @@ const Recipient: React.FC<RecipientProps> = (props) => {
           font-style: italic;
           color: #666;
           margin-left: 1em;
+        }
+
+        a:hover {
+          background: ${color}33;
         }
       `}</style>
     </div>
