@@ -2557,6 +2557,11 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
+airtable-geojson@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/airtable-geojson/-/airtable-geojson-2.0.0.tgz#8fd2c2cf33cf75bc9d431405f6cf260b54b49357"
+  integrity sha512-Z/G2cZqf9tIWuC7Guy7Vp4FbiRzCy+Rd0CEXLJHXaduTqIXAcE2PTqTfnwgyb0Bb/55Fhb0MnjLhW72njjN/Bw==
+
 airtable@^0.8.1:
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/airtable/-/airtable-0.8.1.tgz#8d10f04f41673b86ed75fa054f54470357e36ae0"
