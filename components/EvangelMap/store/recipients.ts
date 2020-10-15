@@ -12,17 +12,15 @@ import {
   ThunkOn,
 } from "easy-peasy";
 import { FeatureCollection, Feature, Point } from "geojson";
+import { createFeatureCollection } from "airtable-geojson";
 import { CircleMarker } from "leaflet";
 import { point, distance } from "@turf/turf";
 
-import {
-  toGeoJSONFeatureCollection,
-  decodeAirtableGeodata,
-} from "../../../lib/geojson";
 import { MetaFields } from "../../../lib/airtable";
 import { StoreModel } from "./index";
 import { DriversModel } from "./drivers";
 import { driverPalette } from "../../../lib/palette";
+import { rootCertificates } from "tls";
 
 export interface RecipientFields {
   /** Name lookup for the linked Request table record */
@@ -44,7 +42,7 @@ export interface RecipientFields {
   "Dietary restrictions": string;
 
   /** Recipient's preferred language  */
-  "Language": string;
+  Language: string;
 
   /** ID of the linked Neighborhood table record for this driver */
   Neighborhood: string[];
@@ -96,7 +94,7 @@ export interface RecipientsModel {
   metadata: MetaFields;
 
   /** Memoized GeoJSON representation of records */
-  geojson: Computed<RecipientsModel, FeatureCollection<Point, any>>;
+  geojson: Computed<RecipientsModel, FeatureCollection<Point, RecipientFields>>;
 
   /** Mapping of driver IDs to colors */
   colorMap: {
@@ -169,38 +167,29 @@ export const recipientsModel: RecipientsModel = {
 
       const GENERIC_LAT_LNG: Feature<Point> = point([-73.79485, 40.72822]);
 
-      recipients.forEach((r) => {
-        try {
-          const geodata = decodeAirtableGeodata(r.fields["Geocode cache"]);
-          const {
-            o: { lat, lng },
-          } = geodata;
-
-          // missing lat lng
-          if (!lat || !lng) {
-            missingLatLngs.push(r.id);
-          } else {
-            // generic lat lng
-            const distanceToGenericPoint = distance(
-              point([lng, lat]),
-              GENERIC_LAT_LNG,
-              { units: "meters" }
-            );
-            if (distanceToGenericPoint < 10) {
-              genericLatLngs.push(r.id);
-            }
+      if (recipients.length > 0) {
+        const [featureCollection, errors] = createFeatureCollection(recipients);
+        missingLatLngs = errors.invalidGeocodes.map((r) => r.id);
+        missingGeocodes = errors.missingGeocodes.map((r) => r.id);
+        featureCollection.features.forEach((feature) => {
+          // generic lat lng
+          const [lng, lat] = feature.geometry.coordinates;
+          const distanceToGenericPoint = distance(
+            point([lng, lat]),
+            GENERIC_LAT_LNG,
+            { units: "meters" }
+          );
+          if (distanceToGenericPoint < 10) {
+            genericLatLngs.push(feature.id);
           }
-        } catch (err) {
-          // missing cached geocode
-          missingGeocodes.push(r.id);
-        }
 
-        // unavailable driver
-        const assignedDriverId = r.fields.Driver?.[0];
-        if (assignedDriverId && !driverIds.includes(assignedDriverId)) {
-          unavailableDrivers.push(r.id);
-        }
-      });
+          // unavailable driver
+          const assignedDriverId = feature.properties.Driver?.[0];
+          if (assignedDriverId && !driverIds.includes(assignedDriverId)) {
+            unavailableDrivers.push(feature.id);
+          }
+        });
+      }
 
       return {
         missingGeocodes,
@@ -216,20 +205,22 @@ export const recipientsModel: RecipientsModel = {
   geojson: computed((state) => {
     const recipients = Object.values(state.items);
     if (recipients.length > 0) {
-      const {
-        "Table ID": tableId,
-        "View ID": viewId,
-        "Primary field name": primaryFieldName,
-      } = state.metadata;
-      return toGeoJSONFeatureCollection(recipients, {
-        tableId,
-        viewId,
-        primaryFieldName,
-        colorizer: (record: Airtable.Record<RecipientFields>) => {
+      const [featureCollection, _errors] = createFeatureCollection(recipients, {
+        geocodedFieldName: "Geocode cache",
+        decorate: (record: Airtable.Record<RecipientFields>) => ({
+          meta: {
+            title: record.fields[state.metadata["Primary field name"]],
+            tblId: state.metadata["Table ID"],
+            viwId: state.metadata["View ID"],
+            recId: record.id,
+          },
+        }),
+        colorize: (record: Airtable.Record<RecipientFields>) => {
           const driverId = record.fields.Driver?.[0];
           return state.colorMap[driverId];
         },
       });
+      return featureCollection;
     }
   }),
 

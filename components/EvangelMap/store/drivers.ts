@@ -1,19 +1,14 @@
 import {
   action,
   Action,
-  actionOn,
-  ActionOn,
   computed,
   Computed,
-  debug,
-  thunk,
-  Thunk,
   thunkOn,
   ThunkOn,
 } from "easy-peasy";
+import { FeatureCollection, Point } from "geojson";
+import { createFeatureCollection } from "airtable-geojson";
 
-import { FeatureCollection, Feature, Point } from "geojson";
-import { toGeoJSONFeatureCollection } from "../../../lib/geojson";
 import { MetaFields } from "../../../lib/airtable";
 import { StoreModel } from "./index";
 import { RecipientRecord } from "./recipients";
@@ -42,7 +37,7 @@ export interface DriversModel {
   metadata: MetaFields;
 
   /** Memoized GeoJSON representation of records */
-  geojson: Computed<DriversModel, FeatureCollection<Point, any>>;
+  geojson: Computed<DriversModel, FeatureCollection<Point, DriverFields>>;
 
   // ACTIONS
 
@@ -76,16 +71,18 @@ export const driversModel: DriversModel = {
   geojson: computed((state) => {
     const drivers = Object.values(state.items);
     if (drivers.length > 0) {
-      const {
-        "Table ID": tableId,
-        "View ID": viewId,
-        "Primary field name": primaryFieldName,
-      } = state.metadata;
-      return toGeoJSONFeatureCollection(drivers, {
-        tableId,
-        viewId,
-        primaryFieldName,
+      const [featureCollection, _errors] = createFeatureCollection(drivers, {
+        geocodedFieldName: "Geocode cache",
+        decorate: (record: Airtable.Record<DriverFields>) => ({
+          meta: {
+            title: record.fields[state.metadata["Primary field name"]],
+            tblId: state.metadata["Table ID"],
+            viwId: state.metadata["View ID"],
+            recId: record.id
+          }
+        }),
       });
+      return featureCollection;
     }
   }),
 

@@ -1,5 +1,5 @@
 import { airtable } from "../../lib/airtable";
-import { toGeoJSONFeatureCollection } from "../../lib/geojson";
+import { createFeatureCollection } from "airtable-geojson";
 import { FridgeRecord, FridgeFieldName } from "../../types";
 
 const {
@@ -25,13 +25,14 @@ const fridges = async (req, res) => {
     .all()) as FridgeRecord[];
 
   res.statusCode = 200;
-  res.json(
-    toGeoJSONFeatureCollection(fridges, {
+  const [featureCollection, _errors] = createFeatureCollection(fridges, {
+    decorate: () => ({
       primaryFieldName: "Fridge Name",
       tableId: NEXT_PUBLIC_FRIDGES_TABLE_ID,
       viewId: NEXT_PUBLIC_FRIDGES_VIEW_ID,
-    })
-  );
+    }),
+  });
+  res.json(featureCollection);
   // res.json(fridges);
 };
 

@@ -34,18 +34,18 @@ const Map = () => {
           <GeoJSON
             data={recipients.geojson}
             pointToLayer={(
-              point: Feature<Point, RecipientFields & { recordId: string }>,
+              feature: Feature<Point, RecipientFields & { recordId: string }>,
               latLng
             ) => {
               const isInvalidGenericPoint = recipients.warnings.genericLatLngs.includes(
-                point.properties.recordId
+                feature.id as string
               );
 
               if (isInvalidGenericPoint) {
                 return null;
               }
 
-              const fillColor = point.properties["marker-color"] || "gray";
+              const fillColor = feature.properties["marker-color"] || "gray";
 
               const marker = new CircleMarker(latLng, {
                 radius: 8,
@@ -54,11 +54,11 @@ const Map = () => {
                 fillColor,
                 fillOpacity: 0.5,
               })
-                .bindPopup(airtableHyperlinkFor(point))
+                .bindPopup(airtableHyperlinkFor(feature))
                 .on("mouseover", () => marker.openPopup());
 
               recipientActions.setMarker({
-                recordId: point.properties.recordId,
+                recordId: feature.id as string,
                 marker: marker,
               });
 
@@ -70,7 +70,7 @@ const Map = () => {
             data={drivers.geojson}
             pointToLayer={(point: Feature<Point>, latLng) => {
               const color =
-                recipients.colorMap[point.properties.recordId] || "gray";
+                recipients.colorMap[point.id as string] || "gray";
 
               const marker = new CircleMarker(latLng, {
                 color,
@@ -100,17 +100,11 @@ const Map = () => {
   );
 };
 
-const airtableHyperlinkFor = (point: Feature<Point>) => {
-  const recId = point.properties.recordId;
-  const viwId = point.properties.viewId;
-  const tblId = point.properties.tableId;
-
-  delete point.properties.viewId;
-  delete point.properties.tableId;
-  const primaryFieldValue = point.id as string;
+const airtableHyperlinkFor = (feature: Feature<Point>) => {
+  const { recId, viwId, tblId } = feature?.properties?.meta;
 
   const recordUrl = `https://airtable.com/${tblId}/${viwId}/${recId}`;
-  const linkText = primaryFieldValue;
+  const linkText = feature.properties.meta.title;
 
   return `<a href="${recordUrl}" target="airtable">${linkText}</a>`;
 };

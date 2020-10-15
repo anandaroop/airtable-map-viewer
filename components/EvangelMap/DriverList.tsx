@@ -1,4 +1,4 @@
-import { decodeAirtableGeodata } from "../../lib/geojson";
+import { decodeGeodata } from "airtable-geojson";
 import { RecipientsModel, RecipientRecord } from "./store/recipients";
 import { DriversModel, DriverRecord } from "./store/drivers";
 import { useStoreState } from "./store";
@@ -135,7 +135,7 @@ const Driver: React.FC<DriverProps> = (props) => {
   );
 
   try {
-    const geodata = decodeAirtableGeodata(driver.fields["Geocode cache"]);
+    const geodata = decodeGeodata(driver.fields["Geocode cache"]);
     return (
       <div className="copy-buttons-and-driver">
         <div className="copy-buttons">
@@ -231,7 +231,7 @@ interface RecipientProps {
 const Recipient: React.FC<RecipientProps> = (props) => {
   const { recipient, color, markerMap } = props;
 
-  const geodata = decodeAirtableGeodata(recipient.fields["Geocode cache"]);
+  const geodata = decodeGeodata(recipient.fields["Geocode cache"]);
   const marker = markerMap[recipient.id];
   const hasNotes = Boolean(
     recipient.fields["Recurring notes"] ||
