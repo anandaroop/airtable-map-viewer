@@ -60,7 +60,7 @@ export const Help = () => {
                 </li>
                 <li>
                   Hover over the map markers to see a link to the associated
-                  Airtable record. Click through to open that invidual record
+                  Airtable record. Click through to open that individual record
                   and assign a driver. (You'll have to scroll down to the{" "}
                   <strong>Driver</strong> field.) Refresh this map view
                   frequently, to see the current state of the assignments.
@@ -96,13 +96,32 @@ export const Help = () => {
               </p>
 
               <p>
-                Once all assignments are done, use the "Copy" button to copy a
-                driver itinerary for pasting into Slack.
+                Once all assignments are done, use the{" "}
+                <span className="button">Mapquest</span> button to copy a driver
+                itinerary into{" "}
+                <a href="https://www.mapquest.com/routeplanner/copy-paste">
+                  Mapquest's route optimization tool
+                </a>
+                . Be sure to turn on the "Allow us to re-order stops on your
+                route" option before submitting the route, as that's what tells
+                Mapquest to come up with the most time/fuel-efficient route. You
+                can then populate the "Suggested order" column in the{" "}
+                <strong>Delivery Recipients</strong> table to indicate the
+                optimized itinerary.
+              </p>
+
+              <p>
+                Once all itineraries are complete, use the{" "}
+                <span className="button">Slack</span> button to copy a driver
+                itinerary for pasting into Slack.
               </p>
 
               <h3>Pre-preparation</h3>
 
-              <p>If you are about to do route planning, this has probably already been done for you, but just in case…</p>
+              <p>
+                If you are about to do route planning, this has probably already
+                been done for you, but just in case…
+              </p>
 
               <p>
                 These steps need to be performed beforehand, to get the tool set
@@ -128,7 +147,7 @@ export const Help = () => {
                   2020-07-07`
                 </li>
                 <li>
-                  Double check that the Map Block in{" "}
+                  Double check that the Map App in{" "}
                   <strong>
                     Maps: Coordinated Deliveries &gt;{" "}
                     <em>Delivery Recipients: Map</em>
@@ -137,7 +156,7 @@ export const Help = () => {
                 </li>
 
                 <li>
-                  Double check that the Map Block in{" "}
+                  Double check that the Map App in{" "}
                   <strong>
                     Maps: Coordinated Deliveries &gt;{" "}
                     <em>Volunteers: Current Delivery Drivers Map</em>
@@ -149,7 +168,7 @@ export const Help = () => {
 
               <p>
                 <em>
-                  NOTE: Sometimes it seems that simply opening the the Map Block
+                  NOTE: Sometimes it seems that simply opening the the Map App
                   configuration is necessary to kick off geocoding of all the
                   recipient records.
                 </em>
@@ -190,6 +209,13 @@ export const Help = () => {
         .scrollable {
           max-height: calc(100vh - 10rem - 80px);
           overflow: scroll;
+        }
+
+        .button {
+          border: solid 1px gray;
+          background: #ffffff33;
+          border-radius: 0.25em;
+          padding: 0 0.25em;
         }
       `}</style>
     </>
