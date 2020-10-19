@@ -14,7 +14,7 @@ export default function Home() {
 
       <nav>
         <a href="evangel">Route planning tool</a>
-        <a href="fridges">Community Fridges</a>
+        <a href="https://community-fridges.vercel.app/">Community Fridges</a>
         {/*
           // BORKED
           <a href="volunteers-and-requests">Volunteers and requests</a>
