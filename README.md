@@ -1,5 +1,7 @@
 # Airtable Map Viewer: route planning for mutual aid
 
+_**UPDATE**: This tool has been absorbed into https://github.com/anandaroop/qcc-admin, this repo is for archival purposes only._
+
 This app simplifies the process of assembling itineraries for drivers doing coordinated food delivery dropoffs.
 
 It was developed in 2020 as part of the Queens DSA Mutual Aid committee's response to problems of food insecurity and inadequate govermental response in the wake of COVID.

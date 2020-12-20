@@ -13,8 +13,10 @@ export default function Home() {
       </Head>
 
       <nav>
-        <a href="evangel">Route planning tool</a>
-        <a href="https://community-fridges.vercel.app/">Community Fridges</a>
+        Please use the new admin tool instead. Ask in #mutualaid-data if you have questions.
+
+        {/* <a href="evangel">Route planning tool</a> */}
+        {/* <a href="https://community-fridges.vercel.app/">Community Fridges</a> */}
         {/*
           // BORKED
           <a href="volunteers-and-requests">Volunteers and requests</a>
@@ -30,6 +32,7 @@ export default function Home() {
           display: flex;
           flex-flow: row wrap;
           list-style-type: none;
+          color: #666;
         }
         a {
           width: 10em;
