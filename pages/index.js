@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>QDSAMA</title>
+        <title>QDSAMA: Redirect</title>
         <link rel="icon" href="/favicon.ico" />
         <link
           href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap"
@@ -13,15 +13,9 @@ export default function Home() {
       </Head>
 
       <nav>
-        Please use the new admin tool instead. Ask in #mutualaid-data if you have questions.
-
-        {/* <a href="evangel">Route planning tool</a> */}
-        {/* <a href="https://community-fridges.vercel.app/">Community Fridges</a> */}
-        {/*
-          // BORKED
-          <a href="volunteers-and-requests">Volunteers and requests</a>
-         */}
+        Please use the new admin tool instead. Ask in #mutualaid-data-tech if you have questions.
       </nav>
+
       <style jsx>{`
         nav {
           font-family: "Fira Sans", sans-serif;
@@ -33,20 +27,6 @@ export default function Home() {
           flex-flow: row wrap;
           list-style-type: none;
           color: #666;
-        }
-        a {
-          width: 10em;
-          border: solid 1px #e7212f;
-          border-radius: 0.25em;
-          margin: 0 2em 2em 0;
-          padding: 1em;
-          line-height: 1.6;
-          text-decoration: none;
-          color: #e7212f;
-        }
-        a:hover {
-          background: #e7212f;
-          color: white;
         }
       `}</style>
     </>
